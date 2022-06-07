@@ -3,38 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using Mono.Data.Sqlite;
+using System.Data;
+using System.IO;
+
 public class RegistrationScreen : Screen
 {
-    [SerializeField] Text _loginInput;
-    [SerializeField] Text _passwordInput;
-    [SerializeField] Text _confirmPasswordInput;
-    [SerializeField] Text _emailInput;
+    [SerializeField] InputField _loginInput;
+    [SerializeField] InputField _passwordInput;
+    [SerializeField] InputField _confirmPasswordInput;
+    [SerializeField] InputField _phoneInput;
 
-    public void CheckLoginData()
+    public void CheckRegistrationData()
     {
         if (_loginInput.text == "" ||
-            _passwordInput.text == "" ||
+            _passwordInput.text == "" ||    
             _confirmPasswordInput.text == "" ||
-            _emailInput.text == "")
+            _phoneInput.text == "")
         {
             AlertWrongInput();
             return;
         }
+        if(_passwordInput.text == _confirmPasswordInput.text)
+        {
+            RegistrationInfo registrationInfo = new RegistrationInfo();
+            registrationInfo.Login = _loginInput.text;
+            registrationInfo.Password = _passwordInput.text;
+            registrationInfo.Phone = _phoneInput.text;
 
-        string login = _loginInput.text;
-        string password = _passwordInput.text;
-
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.Login = login;
-        loginInfo.Password = password;
-
-        string json = JsonConvert.SerializeObject(loginInfo);
-        print(json);
-
+            DBOperator dbOperator = new DBOperator();
+            if (dbOperator.AddUserToDB(registrationInfo))
+            {
+                _uiController.ShowScreen(_uiController.TestScreen);
+            }
+        }
     }
 
     void AlertWrongInput()
     {
         print("somthing went wrong");
     }
+}
+
+public struct RegistrationInfo
+{
+    public string Login;
+    public string Password;
+    public string Phone;
 }

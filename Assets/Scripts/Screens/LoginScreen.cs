@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Newtonsoft.Json;
 
 public class LoginScreen : Screen
 {
-    [SerializeField] Text _loginInput;
-    [SerializeField] Text _passwordInput;
+    [SerializeField] InputField _loginInput;
+    [SerializeField] InputField _passwordInput;
 
+    DBOperator dbOperator;
+    
+    
     public void CheckLoginData()
     {
         if(_loginInput.text == "" || 
@@ -25,9 +27,11 @@ public class LoginScreen : Screen
         loginInfo.Login = login;
         loginInfo.Password = password;
 
-        string json = JsonConvert.SerializeObject(loginInfo);
-        print(json);
-
+        DBOperator dbOperator = new DBOperator();
+        if (dbOperator.CheckLogin(loginInfo))
+        {
+            _uiController.ShowScreen(_uiController.MainScreen);
+        }
     }
 
     void AlertWrongInput()
