@@ -13,7 +13,7 @@ public class LoginScreen : Screen
     
     public void CheckLoginData()
     {
-        if(_loginInput.text == "" || 
+        if (_loginInput.text == "" ||
            _passwordInput.text == "")
         {
             AlertWrongInput();
