@@ -42,7 +42,7 @@ public enum EatingFrequency
 }
 public enum ActivityLevel
 {
-    High = 1,
+    Low = 1,
     Medium,
-    Low
+    High
 }

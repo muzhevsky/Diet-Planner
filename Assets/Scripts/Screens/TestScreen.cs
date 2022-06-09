@@ -34,6 +34,7 @@ public class TestScreen : Screen
                 Debug.Log(item);
             }
             Debug.Log(AnswerList.EatingFrequency);
+            Debug.Log(AnswerList.ActivityLevel);
 
             DBOperator dBOperator = new DBOperator();
             dBOperator.AddTestInfo(PlayerPrefs.GetInt("user_id"),AnswerList);
