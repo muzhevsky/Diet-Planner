@@ -24,20 +24,9 @@ public class TestScreen : Screen
         }
         else
         {
-            Debug.Log(AnswerList.Gender);
-            Debug.Log(AnswerList.Goal);
-            Debug.Log(AnswerList.Height);
-            Debug.Log(AnswerList.Weight);
-            Debug.Log(AnswerList.DesiredWeight);
-            foreach(Allergenes item in AnswerList.Allergenes)
-            {
-                Debug.Log(item);
-            }
-            Debug.Log(AnswerList.EatingFrequency);
-            Debug.Log(AnswerList.ActivityLevel);
-
             DBOperator dBOperator = new DBOperator();
             dBOperator.AddTestInfo(PlayerPrefs.GetInt("user_id"),AnswerList);
+            _uiController.ShowScreen(_uiController.MainScreen);
         }
     }
     public void LoadPrevQuestion()

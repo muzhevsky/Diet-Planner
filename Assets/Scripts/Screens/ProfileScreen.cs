@@ -23,6 +23,9 @@ public class ProfileScreen : Screen
         _heightText.text = userData.Height.ToString();
         _weightText.text = userData.Weight.ToString();
         _goalText.text = userData.Goal;
+
+        if (userData.Allergenes_id == 1) _allergenesText.text = "Отсутствуют";
+        else _allergenesText.text = "";
     }
 }
 

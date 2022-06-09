@@ -144,6 +144,13 @@ public class DBOperator
             reader.Close();
         }
 
+        command.CommandText = "SELECT allergen_id FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id")+" LIMIT 1";
+        reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            userData.Allergenes_id = reader.GetInt32(0);
+            reader.Close();
+        }
         //command.CommandText = "SELECT name FROM diets WHERE id=" + goalId.ToString();
         //reader = command.ExecuteReader();
         //if (reader.Read())
