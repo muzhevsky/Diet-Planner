@@ -162,4 +162,54 @@ public class DBOperator
         dbConnection.Close();
         return userData;
     }
+
+    public void AddProduct(Product product)
+    {
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT amount FROM user_ingredients WHERE name=" + product.Name;
+        var reader = command.ExecuteReader();
+        while (reader.Read()) { }
+        if (reader.IsDBNull(0))
+        {
+            reader.Close();
+            command.CommandText = "INSERT INTO user_ingredients(name,amount) VALUES('" + product.Name + "'," + product.Amount + "')";
+        }
+        else
+        {
+            int amount = reader.GetInt32(0);
+            reader.Close();
+
+            amount += product.Amount;
+            command.CommandText = "UPDATE user_ingredients SET amount=" + amount +" WHERE name="+product.Name;
+        }
+        dbConnection.Close();
+    }
+
+    public void CompleteMeal(Meal meal)
+    {
+        foreach(Food food in meal.FoodList)
+        {
+            foreach(Product ingredient in food.Ingredients)
+            {
+                SpendIngredients(ingredient);
+            }
+        }
+    }
+
+    public void SpendIngredients(Product ingredient)
+    {
+        dbConnection.Open();
+        int amount = 0;
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT amount FROM user_ingredients WHERE name=" + ingredient.Name;
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            amount = reader.GetInt32(0)-ingredient.Amount;
+            reader.Close();
+        }
+
+        if (amount >= 0) command.CommandText = "UPDATE user_ingredients SET amount=" + amount + " WHERE name=" + ingredient.Name;
+    }
 }

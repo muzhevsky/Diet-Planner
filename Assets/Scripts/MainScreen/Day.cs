@@ -5,11 +5,18 @@ using UnityEngine.UI;
 
 public class Day : MonoBehaviour
 {
-    public Text Text;
-    public Image Image;
+    [SerializeField] Text _text;
+    [SerializeField] Image _image;
 
-    private void Start()
+
+    public void Highlight(bool isOn)
     {
-        Image = GetComponent<Image>();
+        if (isOn) _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 1);
+        else _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0);
+    }
+
+    public void SetText(string text)
+    {
+        _text.text = text;
     }
 }

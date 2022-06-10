@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShowScreenButton : MonoBehaviour
 {
-    [SerializeField] Screen openingScreen;
-    [SerializeField] GlobalUiController uiController;
-
+    [SerializeField] Screen _openingScreen;
+    [SerializeField] GlobalUiController _uiController;
     public void LoadScreen()
     {
-        uiController.ShowScreen(openingScreen);
+        _uiController.ShowScreen(_openingScreen);
     }
 }

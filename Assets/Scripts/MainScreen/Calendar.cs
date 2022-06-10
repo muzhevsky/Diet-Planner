@@ -32,10 +32,11 @@ public class Calendar : MonoBehaviour
 
         for(int i = pos; i < _monthCapacity[thisMonth] +pos; i++)
         {
-            _days[i].Text.text = (i - pos + 1).ToString();
+            _days[i].SetText((i - pos + 1).ToString());
+            _days[pos + thisDay - 1].Highlight(false);
         }
 
-        _days[pos + thisDay - 1].Image.color = new Color(_days[pos + thisDay - 1].Image.color.r, _days[pos + thisDay - 1].Image.color.g, _days[pos + thisDay - 1].Image.color.b, 1);
+        _days[pos + thisDay - 1].Highlight(true);
     }
     public bool IsLeapYear(int year)
     {
