@@ -11,8 +11,16 @@ public class Day : MonoBehaviour
 
     public void Highlight(bool isOn)
     {
-        if (isOn) _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 1);
-        else _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0);
+        if (isOn)
+        {
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 1);
+            _text.color = Color.white;
+        } 
+        else
+        {
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0);
+            _text.color = Color.black;
+        } 
     }
 
     public void SetText(string text)

@@ -16,6 +16,10 @@ public class ProfileScreen : Screen
     public override void Show()
     {
         base.Show();
+        SetInfoValues();
+    }
+    public void SetInfoValues()
+    {
         DBOperator dBOperator = new DBOperator();
         UserData userData = dBOperator.GetUserData();
         _nameText.text = userData.Name;

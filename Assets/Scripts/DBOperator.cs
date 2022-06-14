@@ -167,21 +167,20 @@ public class DBOperator
     {
         dbConnection.Open();
         command = dbConnection.CreateCommand();
-        command.CommandText = "SELECT amount FROM user_ingredients WHERE name=" + product.Name;
+        command.CommandText = "SELECT amount_left FROM user_ingredients WHERE ingredient_id=" + product.Id;
         var reader = command.ExecuteReader();
-        while (reader.Read()) { }
-        if (reader.IsDBNull(0))
+        if (!reader.Read())
         {
             reader.Close();
-            command.CommandText = "INSERT INTO user_ingredients(name,amount) VALUES('" + product.Name + "'," + product.Amount + "')";
+            command.CommandText = "INSERT INTO user_ingredients(ingredient_id,amount_left) VALUES('" + product.Id + "'," + product.Amount + "')";
+            command.ExecuteScalar();
         }
         else
         {
-            int amount = reader.GetInt32(0);
             reader.Close();
 
-            amount += product.Amount;
-            command.CommandText = "UPDATE user_ingredients SET amount=" + amount +" WHERE name="+product.Name;
+            command.CommandText = "UPDATE user_ingredients SET amount_left=" + product.Amount +" WHERE ingredient_id="+product.Id;
+            command.ExecuteScalar();
         }
         dbConnection.Close();
     }
@@ -211,5 +210,90 @@ public class DBOperator
         }
 
         if (amount >= 0) command.CommandText = "UPDATE user_ingredients SET amount=" + amount + " WHERE name=" + ingredient.Name;
+
+        dbConnection.Close();
+    }
+
+    public void EditAdditionalUserInfo(Goal goal, List<Allergenes> allergenes)
+    {
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT user_data_id FROM user WHERE id="+PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        int dataId = 0;
+        if (reader.Read())
+        {
+            dataId = reader.GetInt32(0);
+        }
+        reader.Close();
+
+        command.CommandText = "UPDATE user_data SET goal_id ="+ (int)goal+" WHERE id=" + dataId;
+        command.ExecuteScalar();
+
+        command.CommandText = "DELETE FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id");
+        command.ExecuteScalar();
+
+        foreach (Allergenes item in allergenes)
+        {
+            command.CommandText = "INSERT INTO allergenes_links(user_id, allergen_id) VALUES(" + PlayerPrefs.GetInt("user_id") + "," + (int)item + ")";
+            command.ExecuteScalar();
+        }
+        dbConnection.Close();
+    }
+
+    public void EditMainUserInfo(string email, int weight, int height)
+    {
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+
+        command.CommandText = "UPDATE user SET login ='" + email + "' WHERE id=" + PlayerPrefs.GetInt("user_id");
+        command.ExecuteScalar();
+
+        command.CommandText = "SELECT user_data_id FROM user WHERE id=" + PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        int dataId = 0;
+        if (reader.Read())
+        {
+            dataId = reader.GetInt32(0);
+        }
+        reader.Close();
+
+        command.CommandText = "UPDATE user_data SET weight =" + weight + " WHERE id=" + dataId;
+        command.ExecuteScalar();
+
+        command.CommandText = "UPDATE user_data SET height =" + height + " WHERE id=" + dataId;
+        command.ExecuteScalar();
+
+    }
+
+    public List<Product> GetUserProducts()
+    {
+        List<Product> products = new List<Product>();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT amount_left, ingredient_id FROM user_ingredients WHERE user_id="+PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            Product productItem = new Product();
+            productItem.Amount = reader.GetInt32(0);
+            productItem.Id = reader.GetInt32(1);
+            products.Add(productItem);
+        }
+        reader.Close();
+
+        for(int i = 0; i < products.Count; i++)
+        {
+            command.CommandText = "SELECT name FROM ingredients WHERE id="+ products[i].Id;
+            reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                products[i].Name = reader.GetString(0);
+            }
+            reader.Close();
+        }
+
+        dbConnection.Close();
+        return products;
     }
 }

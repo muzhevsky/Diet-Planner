@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class TestScreen : Screen
 {
-    [SerializeField] GameObject[] _testItems;
-    [SerializeField] GameObject _backButton;
-    
-    AnswersList AnswerList;
-    int pos = 0;
+    [SerializeField] protected GameObject[] _testItems;
+    [SerializeField] protected GameObject _backButton;
+
+    protected AnswersList AnswerList;
+    protected int pos = 0;
 
     private void Start()
     {
         AnswerList = new AnswersList();
     }
-    public void LoadNextQuestion()
+    public virtual void LoadNextQuestion()
     {
         if(pos < _testItems.Length-1)
         {

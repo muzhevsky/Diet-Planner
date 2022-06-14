@@ -9,8 +9,9 @@ public class Calendar : MonoBehaviour
     [SerializeField] Day[] _days;
     [SerializeField] Text _month;
     [SerializeField] Text _year;
+    [SerializeField] GlobalController _controller;
     int[] _monthCapacity = { 31, 28, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 };
-    string[] _monthes = { "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+    
 
     private void Start()
     {
@@ -22,7 +23,7 @@ public class Calendar : MonoBehaviour
         int thisMonth = DateTime.Today.Month;
         int thisYear = DateTime.Today.Year;
 
-        _month.text = _monthes[thisMonth];
+        _month.text = _controller.MonthNames[thisMonth-1];
         _year.text = thisYear.ToString();
         if (IsLeapYear(thisYear)) _monthCapacity[1] = 29;
         else _monthCapacity[1] = 28;
