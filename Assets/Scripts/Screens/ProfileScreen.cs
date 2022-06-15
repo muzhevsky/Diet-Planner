@@ -21,7 +21,7 @@ public class ProfileScreen : Screen
     public void SetInfoValues()
     {
         DBOperator dBOperator = new DBOperator();
-        UserData userData = dBOperator.GetUserData();
+        ProfileData userData = dBOperator.GetUserViewData();
         _nameText.text = userData.Name;
         _loginText.text = userData.Login;
         _heightText.text = userData.Height.ToString();

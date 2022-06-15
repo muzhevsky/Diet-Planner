@@ -4,5 +4,9 @@ using UnityEngine;
 
 public class MainScreen : Screen
 {
-    
+    public override void Show()
+    {
+        base.Show();
+        
+    }
 }

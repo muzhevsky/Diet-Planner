@@ -10,15 +10,15 @@ public class Graphic : MonoBehaviour
     [SerializeField] GlobalController _controller;
     [SerializeField] float _offset;
 
-    int maxWeight;
-    int minWeight;
-    int weightStep;
-    int weightLimit;
+    int? maxWeight;
+    int? minWeight;
+    int? weightStep;
+    int? weightLimit;
     float k;
 
     [SerializeField] GameObject _testObject;
     RectTransform rectTransform;
-    Vector2[] _points;
+    List<Vector2> _points;
 
     private void Awake()
     {
@@ -30,20 +30,21 @@ public class Graphic : MonoBehaviour
         SetupVerticalAxis(graphicInfo.LastWeights);
         SetupHorizontalAxis(graphicInfo.MonthNumber);
         
-        _points = new Vector2[6];
+        _points = new List<Vector2>();
         k = rectTransform.sizeDelta.y*6/7/(float)weightLimit;
-        for (int i = 0; i < _points.Length; i++)
+        int pos = 0;
+        for (int i = 0; i < graphicInfo.LastWeights.Length; i++)
         {
+            if (graphicInfo.LastWeights[i] == null) continue;
             float temp = (float)graphicInfo.LastWeights[i] - (float)minWeight;
-            _points[i].y = temp*k+_offset;
-            _points[i].x = rectTransform.sizeDelta.x*i/7+_offset;
+            _points.Add(new Vector2(rectTransform.sizeDelta.x * i / 7 + _offset, temp * k + _offset));
             GameObject newPoint = Instantiate(_testObject, this.transform);
             RectTransform newPointRT = ((RectTransform)newPoint.transform);
             newPointRT.anchorMin = new Vector2(0, 0);
-            newPointRT.anchoredPosition = _points[i];
+            newPointRT.anchoredPosition = _points[_points.Count-1];
         }
 
-        for(int i = 0; i < _points.Length-1; i++)
+        for(int i = 0; i < _points.Count-1; i++)
         {
             GameObject newLine = Instantiate(_testObject, this.transform);
             RectTransform newLineRT = ((RectTransform)newLine.transform);
@@ -61,10 +62,17 @@ public class Graphic : MonoBehaviour
             Destroy(transform.GetChild(i).gameObject);
         }
     }
-    void SetupVerticalAxis(int[] weights)
+    void SetupVerticalAxis(int?[] weights)
     {
-        maxWeight = weights[0];
-        minWeight = weights[0];
+        for(int i = 0; i < weights.Length; i++)
+        {
+            if(weights[i] != null)
+            {
+                maxWeight = weights[i];
+                minWeight = weights[i];
+            }
+        }
+        if (minWeight == null) return;
         for (int i = 0; i < weights.Length; i++)
         {
             if (maxWeight < weights[i]) maxWeight = weights[i];

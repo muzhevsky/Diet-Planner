@@ -1,7 +1,13 @@
 using System.Collections.Generic;
 
-public struct Food // блюдо
+public class Food // блюдо
 {
+    public int Id;
     public string Name;
-    public List<Product> Ingredients;   
+    public string Recipe;
+    public List<Product> Ingredients;
+    public int Calories;
+    public float Proteins;
+    public float Fats;
+    public float Carbohydrates;
 }

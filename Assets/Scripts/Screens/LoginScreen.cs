@@ -31,6 +31,7 @@ public class LoginScreen : Screen
         if (dbOperator.CheckLogin(loginInfo))
         {
             _uiController.ShowScreen(_uiController.MainScreen);
+            _controller.UserData = dbOperator.GetUserData();
         }
     }
 

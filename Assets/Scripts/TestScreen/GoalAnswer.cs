@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GoalAnswer : Answer
 {
-    [SerializeField] Goal _goalId;
+    public Goal _goalId;
     public void OnClick()
     {
         _testScreen.SetGoalId(_goalId);

@@ -24,9 +24,14 @@ public class TestScreen : Screen
         }
         else
         {
+            _controller.UserData.GoalId = AnswerList.Goal;
+            _controller.UserData.GenderId = AnswerList.Gender;
+            _controller.UserData.Weight = AnswerList.Weight;
+            _controller.UserData.Height = AnswerList.Height;
+
             DBOperator dBOperator = new DBOperator();
             dBOperator.AddTestInfo(PlayerPrefs.GetInt("user_id"),AnswerList);
-            _uiController.ShowScreen(_uiController.MainScreen);
+            _uiController.ShowScreen(_uiController.DietChoosingScreen);
         }
     }
     public void LoadPrevQuestion()

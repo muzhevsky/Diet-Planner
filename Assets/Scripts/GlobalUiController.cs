@@ -11,6 +11,8 @@ public class GlobalUiController : MonoBehaviour
     public TestScreen TestScreen;
     public ProfileScreen ProfileScreen;
     public EditAdditionalDataScreen EditScreen;
+    public GraphicScreen GraphicScreen;
+    public DietChoosingScreen DietChoosingScreen;
     public Screen ActiveScreen;
 
     Screen _prevScreen;

@@ -27,7 +27,7 @@ public class ConfirmMainData : MonoBehaviour
     {
 
         DBOperator dbOperator = new DBOperator();
-        UserData userData = dbOperator.GetUserData();
+        ProfileData userData = dbOperator.GetUserViewData();
         _email.text = userData.Login;
         _weight.text = userData.Weight.ToString();
         _height.text = userData.Height.ToString();
