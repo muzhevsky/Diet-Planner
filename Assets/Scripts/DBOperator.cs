@@ -195,15 +195,16 @@ public class DBOperator
         dbConnection.Open();
         int amount = 0;
         command = dbConnection.CreateCommand();
-        command.CommandText = "SELECT amount FROM user_ingredients WHERE name=" + ingredient.Name;
+        command.CommandText = "SELECT amount_left FROM user_ingredients WHERE ingredient_id=" + ingredient.Id;
         var reader = command.ExecuteReader();
         if (reader.Read())
         {
             amount = reader.GetInt32(0)-ingredient.Amount;
-            reader.Close();
         }
+        reader.Close();
+        if (amount < 0) amount = 0;
 
-        if (amount >= 0) command.CommandText = "UPDATE user_ingredients SET amount=" + amount + " WHERE name=" + ingredient.Name;
+        command.CommandText = "UPDATE user_ingredients SET amount_left=" + amount + " WHERE ingredient_id=" + ingredient.Id;
 
         dbConnection.Close();
     }
@@ -346,9 +347,10 @@ public class DBOperator
         reader.Close();
 
         double time = DateTime.Now.TimeOfDay.TotalHours;
-        if (time > 6f && time < 12f && !data.HadBreakfastToday) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else if (time >= 12f && time < 17f && !data.HadLunchToday) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        if (!data.HadBreakfastToday) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        else if (!data.HadLunchToday) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
         else if (!data.HadSupperToday) { command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        else return null;
 
         reader = command.ExecuteReader();
         if (reader.Read())
@@ -425,6 +427,9 @@ public class DBOperator
                 reader.Close();
             }
         }
+        if (result.Type == "Завтрак") data.HadBreakfastToday = true;
+        if (result.Type == "Обед") data.HadLunchToday = true;
+        if (result.Type == "Ужин") data.HadSupperToday = true;
         dbConnection.Close();
         return result;
     }

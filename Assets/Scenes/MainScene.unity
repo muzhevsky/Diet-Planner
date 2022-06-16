@@ -4452,8 +4452,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1815801395}
-        m_TargetAssemblyTypeName: GlobalController, Assembly-CSharp
+      - m_Target: {fileID: 1135227882}
+        m_TargetAssemblyTypeName: CardScreen, Assembly-CSharp
         m_MethodName: OnEatButtonPush
         m_Mode: 1
         m_Arguments:
@@ -10123,6 +10123,7 @@ RectTransform:
   - {fileID: 250044181}
   - {fileID: 1143190208}
   - {fileID: 1016809440}
+  - {fileID: 1674965535}
   m_Father: {fileID: 1135227881}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14698,7 +14699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
+  m_HorizontalFit: 0
   m_VerticalFit: 2
 --- !u!114 &823969608
 MonoBehaviour:
@@ -14733,7 +14734,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0417\u0430\u0432\u0442\u0440\u0430\u043A"
+  m_Text: 
 --- !u!222 &823969609
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15634,7 +15635,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 925, y: 1690}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &877000188
 MonoBehaviour:
@@ -19492,6 +19493,7 @@ MonoBehaviour:
   _header: {fileID: 823969608}
   _foodCardPrefab: {fileID: 5467727577226693210, guid: becbc0ddaf97acb4b906756f4892011e, type: 3}
   _foodCardContainer: {fileID: 877000187}
+  _warning: {fileID: 1674965534}
 --- !u!1 &1138194995
 GameObject:
   m_ObjectHideFlags: 0
@@ -19656,8 +19658,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1815801395}
-        m_TargetAssemblyTypeName: GlobalController, Assembly-CSharp
+      - m_Target: {fileID: 1135227882}
+        m_TargetAssemblyTypeName: CardScreen, Assembly-CSharp
         m_MethodName: OnSkipButtonPush
         m_Mode: 1
         m_Arguments:
@@ -27935,6 +27937,86 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1674965534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1674965535}
+  - component: {fileID: 1674965537}
+  - component: {fileID: 1674965536}
+  m_Layer: 5
+  m_Name: Warning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1674965535
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674965534}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 597932880}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -340}
+  m_SizeDelta: {x: -200, y: 196.3073}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1674965536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674965534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: e3de3d5e991b2d646a08c908c328791b, type: 3}
+    m_FontSize: 72
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 4
+    m_MaxSize: 80
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u041D\u043E\u0432\u043E\u0435 \u043C\u0435\u043D\u044E \u0431\u0443\u0434\u0435\u0442
+    \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E \u0437\u0430\u0432\u0442\u0440\u0430"
+--- !u!222 &1674965537
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674965534}
+  m_CullTransparentMesh: 1
 --- !u!1 &1686663609
 GameObject:
   m_ObjectHideFlags: 0
