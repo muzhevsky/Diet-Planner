@@ -20,7 +20,8 @@ public class RegistrationScreen : Screen
         if (_loginInput.text == "" ||
             _passwordInput.text == "" ||    
             _confirmPasswordInput.text == "" ||
-            _phoneInput.text == "")
+            _phoneInput.text == "" ||
+            _displayedNameInput.text == "")
         {
             AlertWrongInput();
             return;

@@ -21,13 +21,9 @@ public class GlobalController : MonoBehaviour
     {
         Year = DateTime.Now.Year;
         Month = DateTime.Now.Month;
-        Year = DateTime.Now.Year;
+        Day = DateTime.Now.Day;
 
-        if (PlayerPrefs.HasKey("user_id"))
-        {
-            _uiController.ShowScreen(_uiController.MainScreen);
-        }
-
+        UserData = new UserData();
     }
 
     public void AddWeight(int weight)

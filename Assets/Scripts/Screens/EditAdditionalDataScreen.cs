@@ -15,7 +15,7 @@ public class EditAdditionalDataScreen : TestScreen
         else
         {
             DBOperator dBOperator = new DBOperator();
-            dBOperator.EditAdditionalUserInfo(AnswerList.Goal, AnswerList.Allergenes);
+            dBOperator.UpdateUserInfo(_controller.UserData);
             _uiController.ShowScreen(_uiController.MainScreen);
         }
     }

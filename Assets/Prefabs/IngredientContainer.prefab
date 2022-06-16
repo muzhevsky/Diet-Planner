@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3849610066620696660}
   - component: {fileID: 9000252172087222625}
   - component: {fileID: 1724981417482245303}
-  - component: {fileID: 3980190791878224038}
+  - component: {fileID: 3766571072365946476}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -133,7 +133,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3980190791878224038
+--- !u!114 &3766571072365946476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,12 +142,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4986228861395284373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39b785271d098ab408dbaa42e6635bba, type: 3}
+  m_Script: {fileID: 11500000, guid: 57396d1a12763f34ab1da3236f560b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _foodScreen: {fileID: 0}
-  _name: {fileID: 5688185647621893340}
-  _amount: {fileID: 3085409846540491921}
+  _ingredientContainer: {fileID: 1741218782754986479}
 --- !u!1 &5179928851312082145
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,11 +179,11 @@ RectTransform:
   m_Father: {fileID: 6238257672105703622}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 208, y: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -180, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &577634768849234390
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -275,11 +273,11 @@ RectTransform:
   m_Father: {fileID: 6238257672105703622}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -270, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &411790124108414337
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -431,7 +429,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: {fileID: 5688185647621893340}
   _amount: {fileID: 3085409846540491921}
-  _confirmButton: {fileID: 3980190791878224038}
+  _measure: {fileID: 6706871691287923218}
+  _confirmButton: {fileID: 0}
 --- !u!114 &571355303926776559
 MonoBehaviour:
   m_ObjectHideFlags: 0

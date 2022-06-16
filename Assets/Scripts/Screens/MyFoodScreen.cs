@@ -7,22 +7,13 @@ public class MyFoodScreen : Screen
     [SerializeField] GameObject _userIngredientsPrefab;
     [SerializeField] Transform _container;
     [SerializeField] GameObject _addFoodWindow;
-    [SerializeField] ConfirmFoodAdding _confirmButton;
+    [SerializeField] AddAnyFood _addFoodButton;
 
-    bool isLoaded;
 
-    private void Start()
-    {
-        isLoaded = false;
-    }
     public override void Show()
     {
         base.Show();
-        if (!isLoaded)
-        {
-            ReloadData();
-            isLoaded = true;
-        }
+        ReloadData();
     }
     public void ReloadData()
     {
@@ -34,10 +25,10 @@ public class MyFoodScreen : Screen
         List<Product> products = dbOperator.GetUserProducts();
         foreach (Product item in products)
         {
-            IngredientContainer ingredient = Instantiate(_userIngredientsPrefab, _container).GetComponent<IngredientContainer>();
-            ingredient.Init(item);
-            ingredient.SetFoodScreen(this);
-            ingredient.SetConfirmButton(_confirmButton);
+            IngredientContainer ingredientContainer = Instantiate(_userIngredientsPrefab, _container).GetComponent<IngredientContainer>();
+            ingredientContainer.SetFoodScreen(this);
+            ingredientContainer.SetConfirmButton(_addFoodButton);
+            ingredientContainer.Init(item);
         }
     }
     public void ShowAddFoodWindow()

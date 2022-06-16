@@ -30,8 +30,10 @@ public class LoginScreen : Screen
         DBOperator dbOperator = new DBOperator();
         if (dbOperator.CheckLogin(loginInfo))
         {
-            _uiController.ShowScreen(_uiController.MainScreen);
             _controller.UserData = dbOperator.GetUserData();
+
+            if(_controller.UserData.DietId!=0) _uiController.ShowScreen(_uiController.MainScreen);
+            else _uiController.ShowScreen(_uiController.TestScreen);
         }
     }
 

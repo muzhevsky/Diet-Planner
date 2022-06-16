@@ -13,6 +13,7 @@ public class ProfileScreen : Screen
     [SerializeField] Text _dietText;
     [SerializeField] Text _allergenesText;
 
+    Meal _currentMeal;
     public override void Show()
     {
         base.Show();
@@ -21,14 +22,17 @@ public class ProfileScreen : Screen
     public void SetInfoValues()
     {
         DBOperator dBOperator = new DBOperator();
-        ProfileData userData = dBOperator.GetUserViewData();
-        _nameText.text = userData.Name;
-        _loginText.text = userData.Login;
-        _heightText.text = userData.Height.ToString();
-        _weightText.text = userData.Weight.ToString();
-        _goalText.text = userData.Goal;
+        ProfileData profile = dBOperator.GetUserViewData();
 
-        if (userData.Allergenes_id == 1) _allergenesText.text = "Отсутствуют";
+        _nameText.text = profile.Name;
+        _loginText.text = profile.Login;
+        _heightText.text = profile.Height.ToString();
+        _weightText.text = profile.Weight.ToString();
+        _dietText.text = profile.Diet;
+        _goalText.text = profile.Goal;
+
+
+        if (profile.Allergenes_id == 1) _allergenesText.text = "Отсутствуют";
         else _allergenesText.text = "";
     }
 }

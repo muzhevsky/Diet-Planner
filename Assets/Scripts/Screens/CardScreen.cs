@@ -10,18 +10,23 @@ public class CardScreen : Screen
     [SerializeField] Transform _foodCardContainer;
     [SerializeField] GameObject _warning;
 
+    DBOperator dbOperator;
     Meal _currentMeal;
+
+    private void Start()
+    {
+        dbOperator = new DBOperator();
+    }
 
     public override void Show()
     {
         base.Show();
+        SetupCurrentMeal();
         LoadMealData();
     }
     void LoadMealData()
     {
-        DBOperator dbOperator = new DBOperator();
-        _currentMeal = dbOperator.GetMeal(_controller.UserData);
-
+        ClearCardList();
         if (_currentMeal != null)
         {
             _warning.SetActive(false);
@@ -36,16 +41,13 @@ public class CardScreen : Screen
         {
             _warning.SetActive(true);
             _header.text = "";
-            if (!_controller.UserData.HadBreakfastToday) _controller.UserData.HadBreakfastToday = true;
-            else if (!_controller.UserData.HadLunchToday) _controller.UserData.HadLunchToday = true;
-            else if (!_controller.UserData.HadSupperToday) _controller.UserData.HadSupperToday = true;
         }
     }
     public void OnEatButtonPush()
     {
-        DBOperator dBOperator = new DBOperator();
-        dBOperator.CompleteMeal(_currentMeal);
-        ClearCardList();
+        dbOperator.CompleteMeal(_currentMeal);
+        MarkMealAsDone();
+        SetupCurrentMeal();
         LoadMealData();
     }
 
@@ -57,9 +59,33 @@ public class CardScreen : Screen
         }
     }
 
+    void MarkMealAsDone()
+    {
+        if(_currentMeal != null)
+        {
+            switch (_currentMeal.Type)
+            {
+                case "Завтрак":
+                    _controller.UserData.HadBreakfastToday = true;
+                    break;
+                case "Обед":
+                    _controller.UserData.HadLunchToday = true;
+                    break;
+                case "Ужин":
+                    _controller.UserData.HadSupperToday = true;
+                    break;
+            }
+        }
+    }
     public void OnSkipButtonPush()
     {
-        ClearCardList();
+        MarkMealAsDone();
+        SetupCurrentMeal();
         LoadMealData();
+    }
+
+    void SetupCurrentMeal()
+    {
+        _currentMeal = dbOperator.GetMeal(_controller.UserData);
     }
 }

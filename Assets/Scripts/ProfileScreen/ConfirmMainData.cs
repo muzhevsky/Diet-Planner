@@ -15,8 +15,12 @@ public class ConfirmMainData : MonoBehaviour
     {
         if(_email.text!="" && _weight.text != "" && _height.text != "")
         {
+            _controller.UserData.Weight = int.Parse(_weight.text);
+            _controller.UserData.Height = int.Parse(_height.text);
+            _controller.UserData.Login = _email.text;
+
             DBOperator dbOperator = new DBOperator();
-            dbOperator.EditMainUserInfo(_email.text, int.Parse(_weight.text), int.Parse(_height.text));
+            dbOperator.UpdateUserInfo(_controller.UserData);
             _window.SetActive(false);
             _uiController.ProfileScreen.SetInfoValues();
             _controller.AddWeight(int.Parse(_weight.text));
