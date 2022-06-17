@@ -13,9 +13,6 @@ public class UserData
     public int DesiredWeight;
     public int DietId;
     public List<Allergenes> Allergenes;
-    public bool HadBreakfastToday;
-    public bool HadLunchToday;
-    public bool HadSupperToday;
     public ActivityLevel ActivityLevel;
     public EatingFrequency EatingFrequency;
 }

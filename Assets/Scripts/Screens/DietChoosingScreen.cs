@@ -9,12 +9,11 @@ public class DietChoosingScreen : Screen
     public override void Show()
     {
         base.Show();
-        DBOperator dbOperator = new DBOperator();
-        List<DietInfo> diets = dbOperator.GetDiets();
+        List<DietInfo> diets = DBOperator.GetDiets();
         foreach (DietInfo diet in diets)
         {
             DietInfoCard newInfoCard = GameObject.Instantiate(_dietInfoCardPrefab, _container).GetComponent<DietInfoCard>();
-            newInfoCard.SetControllers(_controller, _uiController);
+            newInfoCard.SetController(_uiController);
             newInfoCard.SetDietInfo(diet);
         }
     }

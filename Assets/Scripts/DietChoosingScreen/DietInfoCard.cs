@@ -9,12 +9,10 @@ public class DietInfoCard : MonoBehaviour
     [SerializeField] Text _name;
     [SerializeField] Text _description;
     [SerializeField] GlobalUiController _uiController;
-    [SerializeField] GlobalController _controller;
     public void SelectDiet()
     {
-        DBOperator dbOperator = new DBOperator();
-        dbOperator.SetDiet(_dietInfo);
-        _controller.UserData.DietId = _dietInfo.Id;
+        DBOperator.SetDiet(_dietInfo);
+        GlobalController.UserData.DietId = _dietInfo.Id;
         _uiController.ShowScreen(_uiController.MainScreen);
     }
     public void SetDietInfo(DietInfo info)
@@ -23,9 +21,8 @@ public class DietInfoCard : MonoBehaviour
         _name.text = info.Name;
         _description.text = info.Description;
     }
-    public void SetControllers(GlobalController controller, GlobalUiController globalUiController)
+    public void SetController(GlobalUiController globalUiController)
     {
-        _controller = controller;
         _uiController = globalUiController;
     }
 }

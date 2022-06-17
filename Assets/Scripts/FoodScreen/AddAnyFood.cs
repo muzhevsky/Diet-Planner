@@ -18,10 +18,9 @@ public class AddAnyFood : MonoBehaviour
     {
         if(_name.text!="" && _amount.text != "")
         {
-            DBOperator dbOperator = new DBOperator();
             Product.Name = _name.text;
             Product.Amount = int.Parse(_amount.text);
-            dbOperator.AddProduct(Product);
+            DBOperator.AddProduct(Product);
             _foodScreen.ReloadData();
             _name.text = "";
             _amount.text = "";

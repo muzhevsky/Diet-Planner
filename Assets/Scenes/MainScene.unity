@@ -318,7 +318,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1793311150}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _loginInput: {fileID: 1115192489}
   _passwordInput: {fileID: 312615091}
 --- !u!224 &8961462
@@ -1019,7 +1018,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 536598410}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _dietInfoCardPrefab: {fileID: 7756920767727750682, guid: 3d0b875343301fc48bb49d34965c7bfc, type: 3}
   _container: {fileID: 172129001}
 --- !u!1 &63336012
@@ -1535,7 +1533,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1791229916}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _graphic: {fileID: 1512304363}
 --- !u!1 &102391444
 GameObject:
@@ -2547,7 +2544,6 @@ MonoBehaviour:
   _mealContainer: {fileID: 1465777873}
   _dateText: {fileID: 1256358200}
   _mealType: {fileID: 729882855}
-  _controller: {fileID: 1815801395}
 --- !u!114 &173762540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3198,7 +3194,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1184289412}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _userIngredientsPrefab: {fileID: 6238257672105703623, guid: 5ae6393679b04d842b39a6dc753f91b0, type: 3}
   _container: {fileID: 218478500}
   _addFoodWindow: {fileID: 1469381352}
@@ -5494,6 +5489,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2120198426}
+  - {fileID: 1240846530}
   m_Father: {fileID: 834639756}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6977,7 +6973,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 536437393}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _testItems:
   - {fileID: 1605239761}
   - {fileID: 1960692457}
@@ -8615,7 +8610,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1672310162}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _testItems:
   - {fileID: 1434065513}
   - {fileID: 241633720}
@@ -11384,7 +11378,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 254113651}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _loginInput: {fileID: 1996808599}
   _passwordInput: {fileID: 685093141}
   _confirmPasswordInput: {fileID: 1559651980}
@@ -11584,7 +11577,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1079587423}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _nameText: {fileID: 789359984}
   _loginText: {fileID: 751223443}
   _heightText: {fileID: 628792080}
@@ -12087,7 +12079,6 @@ MonoBehaviour:
   - {fileID: 89044259}
   _month: {fileID: 1482936746}
   _year: {fileID: 213189762}
-  _controller: {fileID: 1815801395}
 --- !u!114 &693277412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13852,7 +13843,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 781784973}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 670227092}
+        m_TargetAssemblyTypeName: ProfileScreen, Assembly-CSharp
+        m_MethodName: LogOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &781784973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19431,11 +19434,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 597932879}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _header: {fileID: 823969608}
   _foodCardPrefab: {fileID: 5467727577226693210, guid: becbc0ddaf97acb4b906756f4892011e, type: 3}
   _foodCardContainer: {fileID: 877000187}
   _warning: {fileID: 1674965534}
+  _ateButton: {fileID: 250044180}
+  _skippedButton: {fileID: 1143190207}
 --- !u!1 &1138194995
 GameObject:
   m_ObjectHideFlags: 0
@@ -21314,7 +21318,6 @@ MonoBehaviour:
   _height: {fileID: 1489310819}
   _window: {fileID: 449428344}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
 --- !u!1 &1229402527
 GameObject:
   m_ObjectHideFlags: 0
@@ -21393,6 +21396,78 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1229402527}
+  m_CullTransparentMesh: 1
+--- !u!1 &1240846529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1240846530}
+  - component: {fileID: 1240846532}
+  - component: {fileID: 1240846531}
+  m_Layer: 5
+  m_Name: CameraView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1240846530
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240846529}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 317870086}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.00098419, y: -55.1642}
+  m_SizeDelta: {x: 1080, y: 1401.8745}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1240846531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240846529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &1240846532
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240846529}
   m_CullTransparentMesh: 1
 --- !u!1 &1241224356
 GameObject:
@@ -25501,7 +25576,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _measure: {fileID: 2087704688}
-  _controller: {fileID: 1815801395}
   _addFoodButton: {fileID: 1561264970}
 --- !u!1 &1512304361
 GameObject:
@@ -25565,7 +25639,6 @@ MonoBehaviour:
   - {fileID: 490645711}
   - {fileID: 927423558}
   - {fileID: 625169303}
-  _controller: {fileID: 1815801395}
   _offset: 0
   _testObject: {fileID: 1570504508493712975, guid: 4733580ad798998489a5a075ec85ef22, type: 3}
 --- !u!1 &1529550392
@@ -30558,23 +30631,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1815801394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c12f21008f93ab6419d07bf1f76dc816, type: 3}
+  m_Script: {fileID: 11500000, guid: cc13f1122a494574f80b1b4df32c3569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiController: {fileID: 1992996921}
-  MonthNames:
-  - "\u042F\u043D\u0432\u0430\u0440\u044C"
-  - "\u0424\u0435\u0432\u0440\u0430\u043B\u044C"
-  - "\u041C\u0430\u0440\u0442"
-  - "\u0410\u043F\u0440\u0435\u043B\u044C"
-  - "\u041C\u0430\u0439"
-  - "\u0418\u044E\u043D\u044C"
-  - "\u0418\u044E\u043B\u044C"
-  - "\u0410\u0432\u0433\u0443\u0441\u0442"
-  - "\u0421\u0435\u043D\u0442\u044F\u0431\u0440\u044C"
-  - "\u041E\u043A\u0442\u044F\u0431\u0440\u044C"
-  - "\u041D\u043E\u044F\u0431\u0440\u044C"
-  - "\u0414\u0435\u043A\u0430\u0431\u0440\u044C"
 --- !u!4 &1815801396
 Transform:
   m_ObjectHideFlags: 0
@@ -32508,6 +32567,7 @@ GameObject:
   - component: {fileID: 1942299986}
   - component: {fileID: 1942299989}
   - component: {fileID: 1942299988}
+  - component: {fileID: 1942299987}
   m_Layer: 5
   m_Name: AllergenesValue
   m_TagString: Untagged
@@ -32529,11 +32589,25 @@ RectTransform:
   m_Father: {fileID: 1484663862}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -1}
   m_SizeDelta: {x: 520, y: 58}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1942299987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942299985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!114 &1942299988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32625,6 +32699,7 @@ GameObject:
   - component: {fileID: 1944010970}
   - component: {fileID: 1944010972}
   - component: {fileID: 1944010971}
+  - component: {fileID: 1944010973}
   m_Layer: 5
   m_Name: HeaderText
   m_TagString: Untagged
@@ -32646,10 +32721,10 @@ RectTransform:
   m_Father: {fileID: 1793311151}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -450}
-  m_SizeDelta: {x: 260, y: 117}
+  m_SizeDelta: {x: -402, y: 117}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1944010971
 MonoBehaviour:
@@ -32678,7 +32753,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 9
     m_MaxSize: 96
-    m_Alignment: 0
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -32693,6 +32768,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944010969}
   m_CullTransparentMesh: 1
+--- !u!114 &1944010973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944010969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &1951397780
 GameObject:
   m_ObjectHideFlags: 0
@@ -32838,7 +32927,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 1830366617}
   _uiController: {fileID: 1992996921}
-  _controller: {fileID: 1815801395}
   _mealTypeHeaderText: {fileID: 1193413164}
 --- !u!1 &1960692457
 GameObject:

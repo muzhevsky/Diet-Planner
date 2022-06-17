@@ -24,19 +24,22 @@ public class TestScreen : Screen
         }
         else
         {
-            DBOperator dBOperator = new DBOperator();
-            dBOperator.AddTestInfo(PlayerPrefs.GetInt("user_id"),AnswerList);
+            DBOperator.AddTestInfo(AnswerList);
             _uiController.ShowScreen(_uiController.DietChoosingScreen);
 
-            _controller.UserData.Weight = AnswerList.Weight;
-            _controller.UserData.Height = AnswerList.Height;
-            _controller.UserData.DesiredWeight = AnswerList.DesiredWeight;
-            _controller.UserData.GenderId = AnswerList.Gender;
-            _controller.UserData.Allergenes = AnswerList.Allergenes;
-            _controller.UserData.GoalId = AnswerList.Goal;
-            _controller.UserData.EatingFrequency = AnswerList.EatingFrequency;
-            _controller.UserData.ActivityLevel = AnswerList.ActivityLevel;
+            SetupUserData();
         }
+    }
+    protected void SetupUserData()
+    {
+        GlobalController.UserData.Weight = AnswerList.Weight;
+        GlobalController.UserData.Height = AnswerList.Height;
+        GlobalController.UserData.DesiredWeight = AnswerList.DesiredWeight;
+        GlobalController.UserData.GenderId = AnswerList.Gender;
+        GlobalController.UserData.Allergenes = AnswerList.Allergenes;
+        GlobalController.UserData.GoalId = AnswerList.Goal;
+        GlobalController.UserData.EatingFrequency = AnswerList.EatingFrequency;
+        GlobalController.UserData.ActivityLevel = AnswerList.ActivityLevel;
     }
     public void LoadPrevQuestion()
     {

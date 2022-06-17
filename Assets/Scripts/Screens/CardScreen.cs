@@ -9,14 +9,10 @@ public class CardScreen : Screen
     [SerializeField] GameObject _foodCardPrefab;
     [SerializeField] Transform _foodCardContainer;
     [SerializeField] GameObject _warning;
+    [SerializeField] GameObject _ateButton;
+    [SerializeField] GameObject _skippedButton;
 
-    DBOperator dbOperator;
     Meal _currentMeal;
-
-    private void Start()
-    {
-        dbOperator = new DBOperator();
-    }
 
     public override void Show()
     {
@@ -29,6 +25,8 @@ public class CardScreen : Screen
         ClearCardList();
         if (_currentMeal != null)
         {
+            _ateButton.gameObject.SetActive(true);
+            _skippedButton.gameObject.SetActive(true);
             _warning.SetActive(false);
             _header.text = _currentMeal.Type;
             foreach (Food food in _currentMeal.FoodList)
@@ -41,11 +39,13 @@ public class CardScreen : Screen
         {
             _warning.SetActive(true);
             _header.text = "";
+            _ateButton.gameObject.SetActive(false);
+            _skippedButton.gameObject.SetActive(false);
         }
     }
     public void OnEatButtonPush()
     {
-        dbOperator.CompleteMeal(_currentMeal);
+        DBOperator.CompleteMeal(_currentMeal);
         MarkMealAsDone();
         SetupCurrentMeal();
         LoadMealData();
@@ -66,13 +66,13 @@ public class CardScreen : Screen
             switch (_currentMeal.Type)
             {
                 case "Завтрак":
-                    _controller.UserData.HadBreakfastToday = true;
+                    PlayerPrefs.SetInt("HadBreakfastToday",1);
                     break;
                 case "Обед":
-                    _controller.UserData.HadLunchToday = true;
+                    PlayerPrefs.SetInt("HadLunchToday", 1);
                     break;
                 case "Ужин":
-                    _controller.UserData.HadSupperToday = true;
+                    PlayerPrefs.SetInt("HadSupperToday", 1);
                     break;
             }
         }
@@ -86,6 +86,6 @@ public class CardScreen : Screen
 
     void SetupCurrentMeal()
     {
-        _currentMeal = dbOperator.GetMeal(_controller.UserData);
+        _currentMeal = DBOperator.GetMeal(GlobalController.UserData);
     }
 }

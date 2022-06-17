@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Newtonsoft.Json;
 using Mono.Data.Sqlite;
 using System.Data;
 using System.IO;
@@ -34,8 +33,7 @@ public class RegistrationScreen : Screen
             registrationInfo.Phone = _phoneInput.text;
             registrationInfo.DisplayedName = _displayedNameInput.text;
 
-            DBOperator dbOperator = new DBOperator();
-            if (dbOperator.AddUserToDB(registrationInfo))
+            if (DBOperator.AddUserToDB(registrationInfo))
             {
                 _uiController.ShowScreen(_uiController.TestScreen);
             }

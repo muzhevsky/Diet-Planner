@@ -14,8 +14,8 @@ public class EditAdditionalDataScreen : TestScreen
         }
         else
         {
-            DBOperator dBOperator = new DBOperator();
-            dBOperator.UpdateUserInfo(_controller.UserData);
+            SetupUserData();
+            DBOperator.UpdateUserInfo(GlobalController.UserData);
             _uiController.ShowScreen(_uiController.MainScreen);
         }
     }

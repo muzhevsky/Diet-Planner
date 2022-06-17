@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public struct ProfileData
 {
     public string Name;
@@ -6,5 +8,5 @@ public struct ProfileData
     public int Height;
     public string Goal;
     public string Diet;
-    public int Allergenes_id;
+    public List<string> AllergenesNames;
 }

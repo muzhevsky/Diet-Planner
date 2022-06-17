@@ -10,28 +10,24 @@ public class ConfirmMainData : MonoBehaviour
     [SerializeField] InputField _height;
     [SerializeField] GameObject _window;
     [SerializeField] GlobalUiController _uiController;
-    [SerializeField] GlobalController _controller;
     public void Confirm()
     {
         if(_email.text!="" && _weight.text != "" && _height.text != "")
         {
-            _controller.UserData.Weight = int.Parse(_weight.text);
-            _controller.UserData.Height = int.Parse(_height.text);
-            _controller.UserData.Login = _email.text;
+            GlobalController.UserData.Weight = int.Parse(_weight.text);
+            GlobalController.UserData.Height = int.Parse(_height.text);
+            GlobalController.UserData.Login = _email.text;
 
-            DBOperator dbOperator = new DBOperator();
-            dbOperator.UpdateUserInfo(_controller.UserData);
+            DBOperator.UpdateUserInfo(GlobalController.UserData);
             _window.SetActive(false);
             _uiController.ProfileScreen.SetInfoValues();
-            _controller.AddWeight(int.Parse(_weight.text));
+            GlobalController.AddWeight(int.Parse(_weight.text), _uiController);
         }
     }
 
     private void OnEnable()
     {
-
-        DBOperator dbOperator = new DBOperator();
-        ProfileData userData = dbOperator.GetUserViewData();
+        ProfileData userData = DBOperator.GetUserViewData();
         _email.text = userData.Login;
         _weight.text = userData.Weight.ToString();
         _height.text = userData.Height.ToString();

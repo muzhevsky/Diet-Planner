@@ -11,11 +11,9 @@ public class ToggleDailyMenuButton : MonoBehaviour
     [SerializeField] Transform _mealContainer;
     [SerializeField] Text _dateText;
     [SerializeField] Text _mealType;
-    [SerializeField] GlobalController _controller;
     public void Toggle()
     {
-        DBOperator dbOperator = new DBOperator();
-        Meal meal = dbOperator.GetMeal(_controller.UserData);
+        Meal meal = DBOperator.GetMeal(GlobalController.UserData);
 
         for(int i = 0; i < _mealContainer.childCount; i++)
         {
@@ -28,7 +26,7 @@ public class ToggleDailyMenuButton : MonoBehaviour
     {
         _dailyMenu.SetActive(!_dailyMenu.activeSelf);
         _mealType.text = meal.Type;
-        _dateText.text = _controller.Day + " " + _controller.MonthNames[_controller.Month];
+        _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month];
         foreach (Food food in meal.FoodList)
         {
             GameObject newCard = Instantiate(_mealPrefab, _mealContainer);

@@ -7,7 +7,6 @@ public class SearchProductInput : MonoBehaviour
 {
     InputField _input;
     [SerializeField] Text _measure;
-    [SerializeField] GlobalController _controller;
     [SerializeField] AddAnyFood _addFoodButton;
     private void Start()
     {
@@ -16,8 +15,7 @@ public class SearchProductInput : MonoBehaviour
 
     public void SearchProduct()
     {
-        DBOperator dbOperator = new DBOperator();
-        List<Product> products = dbOperator.GetAllDietProducts(_controller.UserData);
+        List<Product> products = DBOperator.GetAllDietProducts(GlobalController.UserData);
         
         foreach(Product product in products)
         {

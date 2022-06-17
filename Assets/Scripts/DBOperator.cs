@@ -8,28 +8,29 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.Android;
 
-public class DBOperator
+public static class DBOperator
 {
-    string fileConnection;
+    static IDbConnection dbConnection;
+    static IDbCommand command;
 
-    IDbConnection dbConnection;
-    IDbCommand command;
-
-    string DATABASE_NAME = "database.db";
-    public DBOperator()
+    static string DATABASE_NAME = "database.db";
+    public static void Init()
     {
-        if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite) && Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead)){
-            string filePath = Path.Combine(Application.persistentDataPath, DATABASE_NAME);
-            if (!File.Exists(filePath)) UnpackDatabase(filePath);
-            dbConnection = new SqliteConnection("Data Source=" + filePath);
-        }
-        else
-        {
-            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
-            Permission.RequestUserPermission(Permission.ExternalStorageRead);
-        }
+        string DBPath = GetDatabasePath();
+        dbConnection = new SqliteConnection("Data Source=" + DBPath);
     }
-    void UnpackDatabase(string toPath)
+    static string GetDatabasePath()
+    {
+#if UNITY_EDITOR
+        return Path.Combine(Application.streamingAssetsPath, DATABASE_NAME);
+#endif
+#if UNITY_ANDROID
+        string filePath = Path.Combine(Application.persistentDataPath, DATABASE_NAME);
+        if (!File.Exists(filePath)) UnpackDatabase(filePath);
+        return filePath;
+#endif
+    }
+    static void UnpackDatabase(string toPath)
     {
         string fromPath = Path.Combine(Application.streamingAssetsPath, DATABASE_NAME);
 
@@ -38,12 +39,13 @@ public class DBOperator
 
         File.WriteAllBytes(toPath, reader.bytes);
     }
-    public bool AddUserToDB(RegistrationInfo regInfo)
+    public static bool AddUserToDB(RegistrationInfo regInfo)
     {
-        dbConnection.Open();
-        command = dbConnection.CreateCommand();
         try
         {
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        
             command.CommandText = "INSERT INTO user(login, password, phone_number, name)" +
             " VALUES('" + regInfo.Login + "', '" + regInfo.Password + "', '" + regInfo.Phone + "', '"+regInfo.DisplayedName+"')";
             command.ExecuteScalar();
@@ -54,8 +56,6 @@ public class DBOperator
             {
                 PlayerPrefs.SetInt("user_id", reader.GetInt32(0));
                 reader.Close();
-                dbConnection.Close();
-                return true;
             }
 
             dbConnection.Close();
@@ -63,17 +63,17 @@ public class DBOperator
         }
         catch(SqliteException e)
         {
-            Debug.Log(e.Message);
             dbConnection.Close();
             return false;
         }
     }
-    public bool CheckLogin(LoginInfo logInfo)
+    public static bool CheckLogin(LoginInfo logInfo)
     {
-        dbConnection.Open();
-        command = dbConnection.CreateCommand();
         try
         {
+            dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        
             command.CommandText = "SELECT password, id FROM user WHERE login = '" + logInfo.Login + "'";
             var reader = command.ExecuteReader();
             if (reader.Read())
@@ -91,12 +91,13 @@ public class DBOperator
         }
         catch(SqliteException ex)
         {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Text>().text = ex.Message;
             Debug.Log(ex.Message);
             dbConnection.Close();
             return false;
         }
     }
-    public void AddTestInfo(int userId, AnswersList answersList)
+    public static void AddTestInfo(AnswersList answersList)
     {
         dbConnection.Open();
         command = dbConnection.CreateCommand();
@@ -124,9 +125,9 @@ public class DBOperator
         dbConnection.Close();
     }
 
-    public ProfileData GetUserViewData()
+    public static ProfileData GetUserViewData()
     {
-        ProfileData userData = new ProfileData();
+        ProfileData profileData = new ProfileData();
         int userDataId = 0;
         int dietId = 0;
         int goalId = 0;
@@ -138,8 +139,8 @@ public class DBOperator
         var reader = command.ExecuteReader();
         if (reader.Read())
         {
-            userData.Name = reader.GetString(0);
-            userData.Login = reader.GetString(1);
+            profileData.Name = reader.GetString(0);
+            profileData.Login = reader.GetString(1);
             userDataId = reader.GetInt32(2);
         }
         reader.Close();
@@ -148,8 +149,8 @@ public class DBOperator
         reader = command.ExecuteReader();
         if (reader.Read())
         {
-            userData.Weight = reader.GetInt32(0);
-            userData.Height = reader.GetInt32(1);
+            profileData.Weight = reader.GetInt32(0);
+            profileData.Height = reader.GetInt32(1);
             dietId = reader.GetInt32(2);
             goalId = reader.GetInt32(3);
         }
@@ -159,31 +160,41 @@ public class DBOperator
         reader = command.ExecuteReader();
         if (reader.Read())
         {
-            userData.Goal = reader.GetString(0);
+            profileData.Goal = reader.GetString(0);
         }
         reader.Close();
 
-        command.CommandText = "SELECT allergen_id FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id")+" LIMIT 1";
+        List<int> allergenesIds = new List<int>();
+        command.CommandText = "SELECT allergen_id FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id");
         reader = command.ExecuteReader();
-        if (reader.Read())
+        while (reader.Read())
         {
-            userData.Allergenes_id = reader.GetInt32(0);
+            allergenesIds.Add(reader.GetInt32(0));
         }
         reader.Close();
+
+        profileData.AllergenesNames = new List<string>();
+        foreach(int id in allergenesIds)
+        {
+            command.CommandText = "SELECT name FROM allergenes WHERE id=" + id;
+            reader = command.ExecuteReader();
+            if (reader.Read()) profileData.AllergenesNames.Add(reader.GetString(0));
+            reader.Close();
+        }
 
         command.CommandText = "SELECT name FROM diets WHERE id=" + dietId.ToString();
         reader = command.ExecuteReader();
         if (reader.Read())
         {
-            userData.Diet = reader.GetString(0);
+            profileData.Diet = reader.GetString(0);
         }
         reader.Close();
 
         dbConnection.Close();
-        return userData;
+        return profileData;
     }
 
-    public void AddProduct(Product product)
+    public static void AddProduct(Product product)
     {
         dbConnection.Open();
         int id = 0;
@@ -219,7 +230,7 @@ public class DBOperator
         dbConnection.Close();
     }
 
-    public void CompleteMeal(Meal meal)
+    public static void CompleteMeal(Meal meal)
     {
         if (meal != null)
         {
@@ -233,7 +244,7 @@ public class DBOperator
         }
     }
 
-    public void SpendIngredients(Product ingredient)
+    public static void SpendIngredients(Product ingredient)
     {
         dbConnection.Open();
         int amount = 0;
@@ -252,27 +263,27 @@ public class DBOperator
         dbConnection.Close();
     }
 
-    public void UpdateUserInfo(UserData userData)
+    public static void UpdateUserInfo(UserData userData)
     {
         dbConnection.Open();
         command = dbConnection.CreateCommand();
 
-        command.CommandText = "UPDATE user_data SET goal_id ="+ (int)userData.GoalId+" WHERE id="+userData.Id;
+        if(userData.GoalId != 0) command.CommandText = "UPDATE user_data SET goal_id ="+ (int)userData.GoalId+" WHERE id="+userData.Id;
         command.ExecuteScalar();
 
-        command.CommandText = "UPDATE user SET login =" + userData.Login + " WHERE id=" + PlayerPrefs.GetInt("user_id");
+        if (userData.Login != null) command.CommandText = "UPDATE user SET login ='" + userData.Login + "' WHERE id=" + PlayerPrefs.GetInt("user_id");
         command.ExecuteScalar();
 
-        command.CommandText = "UPDATE user_data SET weight =" + userData.Weight + " WHERE id=" + userData.Id;
+        if (userData.Weight != 0) command.CommandText = "UPDATE user_data SET weight =" + userData.Weight + " WHERE id=" + userData.Id;
         command.ExecuteScalar();
 
-        command.CommandText = "UPDATE user_data SET height =" + userData.Height + " WHERE id=" + userData.Id;
+        if (userData.Height != 0) command.CommandText = "UPDATE user_data SET height =" + userData.Height + " WHERE id=" + userData.Id;
         command.ExecuteScalar();
 
-        command.CommandText = "UPDATE user_data SET activity_level_id =" + (int)userData.ActivityLevel + " WHERE id=" + userData.Id;
+        if (userData.ActivityLevel != 0) command.CommandText = "UPDATE user_data SET activity_level_id =" + (int)userData.ActivityLevel + " WHERE id=" + userData.Id;
         command.ExecuteScalar();
 
-        command.CommandText = "UPDATE user_data SET eating_frequency_id =" + (int)userData.EatingFrequency + " WHERE id=" + userData.Id;
+        if (userData.EatingFrequency != 0) command.CommandText = "UPDATE user_data SET eating_frequency_id =" + (int)userData.EatingFrequency + " WHERE id=" + userData.Id;
         command.ExecuteScalar();
 
         command.CommandText = "DELETE FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id");
@@ -287,7 +298,7 @@ public class DBOperator
         dbConnection.Close();
     }
 
-    public List<Product> GetUserProducts()
+    public static List<Product> GetUserProducts()
     {
         List<Product> products = new List<Product>();
         dbConnection.Open();
@@ -319,7 +330,7 @@ public class DBOperator
         return products;
     }
 
-    public List<DietInfo> GetDiets()
+    public static List<DietInfo> GetDiets()
     {
         List<DietInfo> result = new List<DietInfo>();
         int goalId = 0;
@@ -357,7 +368,7 @@ public class DBOperator
         return result;
     }
 
-    public void SetDiet(DietInfo diet)
+    public static void SetDiet(DietInfo diet)
     {
         dbConnection.Open();
         command = dbConnection.CreateCommand();
@@ -376,13 +387,14 @@ public class DBOperator
         dbConnection.Close();
     }
 
-    public Meal GetMeal(UserData data)
+    public static Meal GetMeal(UserData data)
     {
         Meal result = new Meal();
         int dailyMenuId = 0;
         int mealId = 0;
         int mealTypeId = 0;
 
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
         dbConnection.Open();
         command = dbConnection.CreateCommand();
         command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId+" AND day="+(int)DateTime.Today.DayOfWeek;
@@ -394,9 +406,9 @@ public class DBOperator
         reader.Close();
 
         double time = DateTime.Now.TimeOfDay.TotalHours;
-        if (!data.HadBreakfastToday) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else if (!data.HadLunchToday) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else if (!data.HadSupperToday) { command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        if (PlayerPrefs.GetInt("HadBreakfastToday")==0) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        else if (PlayerPrefs.GetInt("HadLunchToday") == 0) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        else if (PlayerPrefs.GetInt("HadSupperToday") == 0) { command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId; }
         else return null;
 
         reader = command.ExecuteReader();
@@ -440,6 +452,7 @@ public class DBOperator
             {
                 item.Name = reader.GetString(0);
                 item.Calories = reader.GetInt32(1);
+                float test = reader.GetFloat(2);
                 item.Proteins = reader.GetFloat(2);
                 item.Fats = reader.GetFloat(3);
                 item.Carbohydrates = reader.GetFloat(4);
@@ -477,7 +490,7 @@ public class DBOperator
         dbConnection.Close();
         return result;
     }
-    public UserData GetUserData()
+    public static UserData GetUserData()
     {
         UserData userData = new UserData();
         int userDataId = 0;
@@ -523,7 +536,7 @@ public class DBOperator
         return userData;
     }
 
-    public List<Product> GetAllDietProducts(UserData userData)
+    public static List<Product> GetAllDietProducts(UserData userData)
     {
         List<Product> result = new List<Product>();
 

@@ -7,9 +7,7 @@ public class LoginScreen : Screen
 {
     [SerializeField] InputField _loginInput;
     [SerializeField] InputField _passwordInput;
-
-    DBOperator dbOperator;
-    
+       
     
     public void CheckLoginData()
     {
@@ -27,12 +25,11 @@ public class LoginScreen : Screen
         loginInfo.Login = login;
         loginInfo.Password = password;
 
-        DBOperator dbOperator = new DBOperator();
-        if (dbOperator.CheckLogin(loginInfo))
+        if (DBOperator.CheckLogin(loginInfo))
         {
-            _controller.UserData = dbOperator.GetUserData();
+            GlobalController.UserData = DBOperator.GetUserData();
 
-            if(_controller.UserData.DietId!=0) _uiController.ShowScreen(_uiController.MainScreen);
+            if(GlobalController.UserData.DietId!=0) _uiController.ShowScreen(_uiController.MainScreen);
             else _uiController.ShowScreen(_uiController.TestScreen);
         }
     }

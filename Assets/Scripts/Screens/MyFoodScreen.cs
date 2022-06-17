@@ -21,8 +21,8 @@ public class MyFoodScreen : Screen
         {
             Destroy(_container.GetChild(i).gameObject);
         }
-        DBOperator dbOperator = new DBOperator();
-        List<Product> products = dbOperator.GetUserProducts();
+
+        List<Product> products = DBOperator.GetUserProducts();
         foreach (Product item in products)
         {
             IngredientContainer ingredientContainer = Instantiate(_userIngredientsPrefab, _container).GetComponent<IngredientContainer>();

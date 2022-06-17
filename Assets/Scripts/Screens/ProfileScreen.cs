@@ -21,8 +21,7 @@ public class ProfileScreen : Screen
     }
     public void SetInfoValues()
     {
-        DBOperator dBOperator = new DBOperator();
-        ProfileData profile = dBOperator.GetUserViewData();
+        ProfileData profile = DBOperator.GetUserViewData();
 
         _nameText.text = profile.Name;
         _loginText.text = profile.Login;
@@ -30,10 +29,20 @@ public class ProfileScreen : Screen
         _weightText.text = profile.Weight.ToString();
         _dietText.text = profile.Diet;
         _goalText.text = profile.Goal;
+        _allergenesText.text = "";
+        foreach(string item in profile.AllergenesNames)
+        {
+            _allergenesText.text += item+" ";
+        }
 
+        if (profile.AllergenesNames.Count == 0) _allergenesText.text = "Отсутствуют";
+    }
 
-        if (profile.Allergenes_id == 1) _allergenesText.text = "Отсутствуют";
-        else _allergenesText.text = "";
+    public void LogOut()
+    {
+        PlayerPrefs.DeleteKey("user_id");
+        GlobalController.UserData = new UserData();
+        _uiController.ShowScreen(_uiController.LoginScreen);
     }
 }
 
