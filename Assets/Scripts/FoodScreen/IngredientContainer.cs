@@ -33,4 +33,8 @@ public class IngredientContainer : MonoBehaviour
     {
         _addFoodButton = confirmButton;
     }
+    public void SetProduct(Product product)
+    {
+        _product = product;
+    }
 }

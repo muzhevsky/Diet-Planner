@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Android;
 
 public class DBOperator
 {
@@ -14,12 +15,28 @@ public class DBOperator
     IDbConnection dbConnection;
     IDbCommand command;
 
-    string DATABASE_NAME = "/someDB.bytes";
+    string DATABASE_NAME = "database.db";
     public DBOperator()
     {
-        string filepath = Application.dataPath + "/db" + DATABASE_NAME;
-        fileConnection = "URI=file:" + filepath;
-        dbConnection = new SqliteConnection(fileConnection);
+        if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite) && Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead)){
+            string filePath = Path.Combine(Application.persistentDataPath, DATABASE_NAME);
+            if (!File.Exists(filePath)) UnpackDatabase(filePath);
+            dbConnection = new SqliteConnection("Data Source=" + filePath);
+        }
+        else
+        {
+            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+            Permission.RequestUserPermission(Permission.ExternalStorageRead);
+        }
+    }
+    void UnpackDatabase(string toPath)
+    {
+        string fromPath = Path.Combine(Application.streamingAssetsPath, DATABASE_NAME);
+
+        WWW reader = new WWW(fromPath);
+        while (!reader.isDone) { }
+
+        File.WriteAllBytes(toPath, reader.bytes);
     }
     public bool AddUserToDB(RegistrationInfo regInfo)
     {
@@ -63,7 +80,8 @@ public class DBOperator
             {
                 if (reader.GetString(0) == logInfo.Password)
                 {
-                    PlayerPrefs.SetInt("user_id", reader.GetInt32(1));
+                    int id = reader.GetInt32(1);
+                    PlayerPrefs.SetInt("user_id", id);
                     dbConnection.Close();
                     return true;
                 }
@@ -170,6 +188,7 @@ public class DBOperator
         dbConnection.Open();
         int id = 0;
         int amountLeft;
+        int userId = PlayerPrefs.GetInt("user_id");
         command = dbConnection.CreateCommand();
 
         command.CommandText = "SELECT id FROM ingredients WHERE name='" + product.Name+"'";
@@ -180,12 +199,12 @@ public class DBOperator
         }
         reader.Close();
 
-        command.CommandText = "SELECT amount_left FROM user_ingredients WHERE ingredient_id=" + id;
+        command.CommandText = "SELECT amount_left FROM user_ingredients WHERE ingredient_id=" + id + " AND user_id="+ userId;
         reader = command.ExecuteReader();
         if (!reader.Read())
         {
             reader.Close();
-            command.CommandText = "INSERT INTO user_ingredients(user_id,ingredient_id,amount_left) VALUES(" + PlayerPrefs.GetInt("user_id") + "," + id + "," + product.Amount + ")";
+            command.CommandText = "INSERT INTO user_ingredients(user_id,ingredient_id,amount_left) VALUES(" +userId + "," + id + "," + product.Amount + ")";
             command.ExecuteScalar();
         }
         else
@@ -194,7 +213,7 @@ public class DBOperator
             reader.Close();
 
             int temp = product.Amount + amountLeft;
-            command.CommandText = "UPDATE user_ingredients SET amount_left=" + temp + " WHERE ingredient_id="+id;
+            command.CommandText = "UPDATE user_ingredients SET amount_left=" + temp + " WHERE ingredient_id="+id +" AND user_id="+userId;
             command.ExecuteScalar();
         }
         dbConnection.Close();

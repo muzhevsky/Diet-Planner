@@ -10,6 +10,7 @@ public struct AnswersList
     public List<Allergenes> Allergenes;
     public EatingFrequency EatingFrequency;
     public ActivityLevel ActivityLevel;
+    public int DietId;
 }
 
 public enum Allergenes

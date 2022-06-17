@@ -11,11 +11,11 @@ public class DietChoosingScreen : Screen
         base.Show();
         DBOperator dbOperator = new DBOperator();
         List<DietInfo> diets = dbOperator.GetDiets();
-        foreach(DietInfo diet in diets)
+        foreach (DietInfo diet in diets)
         {
             DietInfoCard newInfoCard = GameObject.Instantiate(_dietInfoCardPrefab, _container).GetComponent<DietInfoCard>();
-            newInfoCard.SetDietInfo(diet);
             newInfoCard.SetControllers(_controller, _uiController);
+            newInfoCard.SetDietInfo(diet);
         }
     }
 }

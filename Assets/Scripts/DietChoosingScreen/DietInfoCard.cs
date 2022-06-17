@@ -14,8 +14,8 @@ public class DietInfoCard : MonoBehaviour
     {
         DBOperator dbOperator = new DBOperator();
         dbOperator.SetDiet(_dietInfo);
-        _uiController.ShowScreen(_uiController.MainScreen);
         _controller.UserData.DietId = _dietInfo.Id;
+        _uiController.ShowScreen(_uiController.MainScreen);
     }
     public void SetDietInfo(DietInfo info)
     {

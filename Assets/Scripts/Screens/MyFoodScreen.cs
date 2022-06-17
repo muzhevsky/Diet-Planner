@@ -28,6 +28,7 @@ public class MyFoodScreen : Screen
             IngredientContainer ingredientContainer = Instantiate(_userIngredientsPrefab, _container).GetComponent<IngredientContainer>();
             ingredientContainer.SetFoodScreen(this);
             ingredientContainer.SetConfirmButton(_addFoodButton);
+            ingredientContainer.SetProduct(item);
             ingredientContainer.Init(item);
         }
     }

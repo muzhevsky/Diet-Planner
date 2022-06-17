@@ -30,6 +30,7 @@ public class TestScreen : Screen
 
             _controller.UserData.Weight = AnswerList.Weight;
             _controller.UserData.Height = AnswerList.Height;
+            _controller.UserData.DesiredWeight = AnswerList.DesiredWeight;
             _controller.UserData.GenderId = AnswerList.Gender;
             _controller.UserData.Allergenes = AnswerList.Allergenes;
             _controller.UserData.GoalId = AnswerList.Goal;
