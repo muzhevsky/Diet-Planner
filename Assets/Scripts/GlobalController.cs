@@ -23,7 +23,7 @@ public static class GlobalController
         Day = DateTime.Now.Day;
 
         UserData = new UserData();
-
+        UserData.Allergenes = new List<Allergenes>();
         if (_lastDayUsed != Day)
         {
             PlayerPrefs.SetInt("HadBreakfastToday", 0);

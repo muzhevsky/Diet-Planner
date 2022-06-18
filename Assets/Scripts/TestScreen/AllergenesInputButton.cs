@@ -8,7 +8,7 @@ public class AllergenesInputButton : Answer
     [SerializeField] List<AllergenesAnswer> _toggles;
     public void OnClick()
     {
-        GlobalController.UserData.Allergenes.Clear();
+        GlobalController.UserData?.Allergenes.Clear();
         List<Allergenes> allergenesIds = new List<Allergenes>();
         foreach(AllergenesAnswer item in _toggles)
         {
