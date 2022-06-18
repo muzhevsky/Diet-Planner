@@ -33,10 +33,5 @@ public static class GlobalController
         }
 
         MonthNames = new string[] { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
-}
-
-    public static void AddWeight(int weight, GlobalUiController uiController)
-    {
-        uiController.GraphicScreen.UpdateLastWeight(weight);
     }
 }

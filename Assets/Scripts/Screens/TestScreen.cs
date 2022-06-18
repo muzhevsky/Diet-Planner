@@ -10,6 +10,13 @@ public class TestScreen : Screen
     protected AnswersList AnswerList;
     protected int pos = 0;
 
+    public void RestartTest()
+    {
+        foreach (GameObject item in _testItems) item.SetActive(false);
+        _testItems[0].SetActive(true);
+        pos = 0;
+    }
+
     private void Start()
     {
         AnswerList = new AnswersList();
@@ -25,21 +32,22 @@ public class TestScreen : Screen
         else
         {
             DBOperator.AddTestInfo(AnswerList);
-            _uiController.ShowScreen(_uiController.DietChoosingScreen);
-
             SetupUserData();
+            DBOperator.UpdateWeights(GlobalController.Month);
+
+            _uiController.ShowScreen(_uiController.DietChoosingScreen);
         }
     }
     protected void SetupUserData()
     {
-        GlobalController.UserData.Weight = AnswerList.Weight;
-        GlobalController.UserData.Height = AnswerList.Height;
-        GlobalController.UserData.DesiredWeight = AnswerList.DesiredWeight;
-        GlobalController.UserData.GenderId = AnswerList.Gender;
-        GlobalController.UserData.Allergenes = AnswerList.Allergenes;
-        GlobalController.UserData.GoalId = AnswerList.Goal;
-        GlobalController.UserData.EatingFrequency = AnswerList.EatingFrequency;
-        GlobalController.UserData.ActivityLevel = AnswerList.ActivityLevel;
+        if(AnswerList.Weight!=0) GlobalController.UserData.Weight = AnswerList.Weight;
+        if (AnswerList.Height != 0) GlobalController.UserData.Height = AnswerList.Height;
+        if (AnswerList.DesiredWeight != 0) GlobalController.UserData.DesiredWeight = AnswerList.DesiredWeight;
+        if (AnswerList.Gender != 0) GlobalController.UserData.GenderId = AnswerList.Gender;
+        if (AnswerList.Allergenes.Count != 0) GlobalController.UserData.Allergenes = AnswerList.Allergenes;
+        if (AnswerList.Goal != 0) GlobalController.UserData.GoalId = AnswerList.Goal;
+        if (AnswerList.EatingFrequency != 0) GlobalController.UserData.EatingFrequency = AnswerList.EatingFrequency;
+        if (AnswerList.ActivityLevel != 0) GlobalController.UserData.ActivityLevel = AnswerList.ActivityLevel;
     }
     public void LoadPrevQuestion()
     {

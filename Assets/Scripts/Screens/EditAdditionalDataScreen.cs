@@ -16,7 +16,7 @@ public class EditAdditionalDataScreen : TestScreen
         {
             SetupUserData();
             DBOperator.UpdateUserInfo(GlobalController.UserData);
-            _uiController.ShowScreen(_uiController.MainScreen);
+            _uiController.ShowScreen(_uiController.DietChoosingScreen);
         }
     }
 }

@@ -11,7 +11,7 @@ using Wizcorp.Utils.Logger;
 	{
 
 		private IScanner BarcodeScanner;
-		//public Text TextHeader;
+		public Text TextHeader;
 		public RawImage Image;
 		//public AudioSource Audio;
 
@@ -43,7 +43,7 @@ using Wizcorp.Utils.Logger;
 
 			// Track status of the scanner
 			BarcodeScanner.StatusChanged += (sender, arg) => {
-				//TextHeader.text = "Status: " + BarcodeScanner.Status;
+				TextHeader.text = "Status: " + BarcodeScanner.Status;
 			};
 		}
 
@@ -72,7 +72,7 @@ using Wizcorp.Utils.Logger;
 			// Start Scanning
 			BarcodeScanner.Scan((barCodeType, barCodeValue) => {
 				BarcodeScanner.Stop();
-				//TextHeader.text = "Found: " + barCodeType + " / " + barCodeValue;
+				TextHeader.text = "Found: " + barCodeType + " / " + barCodeValue;
 
 				// Feedback
 				//Audio.Play();

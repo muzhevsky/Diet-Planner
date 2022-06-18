@@ -11,6 +11,8 @@ public class ToggleDailyMenuButton : MonoBehaviour
     [SerializeField] Transform _mealContainer;
     [SerializeField] Text _dateText;
     [SerializeField] Text _mealType;
+    [SerializeField] Text _buttonText;
+
     public void Toggle()
     {
         Meal meal = DBOperator.GetMeal(GlobalController.UserData);
@@ -25,6 +27,8 @@ public class ToggleDailyMenuButton : MonoBehaviour
     IEnumerator Delay(Meal meal)
     {
         _dailyMenu.SetActive(!_dailyMenu.activeSelf);
+        if (_dailyMenu.activeSelf == false) _buttonText.text = "Меню";
+        else _buttonText.text = "Календарь";
         _mealType.text = meal.Type;
         _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month];
         foreach (Food food in meal.FoodList)
@@ -34,5 +38,7 @@ public class ToggleDailyMenuButton : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
         _calendar.SetActive(!_calendar.activeSelf);
+
+        if (meal.FoodList.Count == 0) _mealType.text = "Возвращайтесь завтра";
     }
 }

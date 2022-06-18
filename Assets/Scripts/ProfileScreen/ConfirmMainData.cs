@@ -19,9 +19,8 @@ public class ConfirmMainData : MonoBehaviour
             GlobalController.UserData.Login = _email.text;
 
             DBOperator.UpdateUserInfo(GlobalController.UserData);
-            _window.SetActive(false);
             _uiController.ProfileScreen.SetInfoValues();
-            GlobalController.AddWeight(int.Parse(_weight.text), _uiController);
+            _window.SetActive(false);
         }
     }
 

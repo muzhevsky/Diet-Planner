@@ -9,9 +9,9 @@ public class Graphic : MonoBehaviour
     [SerializeField] Text[] _vertical;
     [SerializeField] float _offset;
 
-    int? maxWeight;
-    int? minWeight;
-    int? verticalStep;
+    int maxWeight;
+    int minWeight;
+    int verticalStep;
 
     float _scale;
 
@@ -20,7 +20,7 @@ public class Graphic : MonoBehaviour
     const float RADIAN = 57.3f;
 
     float _actualVerticalLength;
-    [SerializeField] GameObject _testObject;
+    [SerializeField] GameObject _linePrefab;
     RectTransform rectTransform;
     List<Vector2> _points;
 
@@ -33,7 +33,7 @@ public class Graphic : MonoBehaviour
     {
         ClearGraph();
         SetupVerticalAxis(graphicInfo.LastWeights);
-        SetupHorizontalAxis(graphicInfo.MonthNumber);
+        SetupHorizontalAxis(graphicInfo.MonthNumber, graphicInfo.LastWeights);
 
         for (int i = 0; i < graphicInfo.LastWeights.Length; i++)
         {
@@ -44,26 +44,40 @@ public class Graphic : MonoBehaviour
 
                 for (int j = 0; j < graphicInfo.LastWeights.Length; j++)
                 {
-                    if (graphicInfo.LastWeights[j] == null) continue;
+                    if (graphicInfo.LastWeights[j] == 0) continue;
                     float temp = (float)graphicInfo.LastWeights[j] - (float)minWeight;
                     _points.Add(new Vector2(rectTransform.sizeDelta.x * j / FULL_VERTICAL_LENGTH + _offset, temp * _scale + _offset));
-                    GameObject newPoint = Instantiate(_testObject, this.transform);
+                    GameObject newPoint = Instantiate(_linePrefab, this.transform);
                     RectTransform newPointRT = ((RectTransform)newPoint.transform);
                     newPointRT.anchorMin = new Vector2(0, 0);
                     newPointRT.anchoredPosition = _points[_points.Count - 1];
                 }
 
-                for (int j = 0; j < _points.Count - 1; j++)
+                if (_points.Count == 1)
                 {
-                    GameObject newLine = Instantiate(_testObject, this.transform);
+                    GameObject newLine = Instantiate(_linePrefab, this.transform);
                     RectTransform newLineRT = ((RectTransform)newLine.transform);
                     newLineRT.anchorMin = new Vector2(0, 0);
-                    newLineRT.sizeDelta = new Vector2(Mathf.Sqrt(Mathf.Pow((_points[j + 1].x - _points[j].x), 2) + Mathf.Pow((_points[j + 1].y - _points[j].y), 2)), newLineRT.sizeDelta.y);
+                    newLineRT.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newLineRT.sizeDelta.y);
                     newLineRT.pivot = new Vector2(0, 0.5f);
 
-                    float anchoredOffset = ((RectTransform)_testObject.transform).sizeDelta.y / 2;
-                    newLineRT.anchoredPosition = new Vector2(_points[j].x + anchoredOffset, _points[j].y + anchoredOffset);
-                    newLine.transform.Rotate(0, 0, RADIAN * Mathf.Atan((_points[j + 1].y - _points[j].y) / (_points[j + 1].x - _points[j].x)));
+                    _scale = _actualVerticalLength / (float)(maxWeight);
+                    newLineRT.anchoredPosition = new Vector2(newLineRT.anchoredPosition.x, (maxWeight)*_scale);
+                }
+                else
+                {
+                    for (int j = 0; j < _points.Count - 1; j++)
+                    {
+                        GameObject newLine = Instantiate(_linePrefab, this.transform);
+                        RectTransform newLineRT = ((RectTransform)newLine.transform);
+                        newLineRT.anchorMin = new Vector2(0, 0);
+                        newLineRT.sizeDelta = new Vector2(Mathf.Sqrt(Mathf.Pow((_points[j + 1].x - _points[j].x), 2) + Mathf.Pow((_points[j + 1].y - _points[j].y), 2)), newLineRT.sizeDelta.y);
+                        newLineRT.pivot = new Vector2(0, 0.5f);
+
+                        float anchoredOffset = ((RectTransform)_linePrefab.transform).sizeDelta.y / 2;
+                        newLineRT.anchoredPosition = new Vector2(_points[j].x + anchoredOffset, _points[j].y + anchoredOffset);
+                        newLine.transform.Rotate(0, 0, RADIAN * Mathf.Atan((_points[j + 1].y - _points[j].y) / (_points[j + 1].x - _points[j].x)));
+                    }
                 }
             }
         }
@@ -76,39 +90,46 @@ public class Graphic : MonoBehaviour
             Destroy(transform.GetChild(i).gameObject);
         }
     }
-    void SetupVerticalAxis(int?[] weights)
+    void SetupVerticalAxis(int[] weights)
     {
         for(int i = 0; i < weights.Length; i++)
         {
-            if(weights[i] != null)
+            if(weights[i] != 0)
             {
                 maxWeight = weights[i];
                 minWeight = weights[i];
             }
         }
-        if (minWeight == null) return;
+
+        if (minWeight == 0) return;
+
         for (int i = 0; i < weights.Length; i++)
         {
+            if(weights[i]==0) continue;
             if (maxWeight < weights[i]) maxWeight = weights[i];
             if (minWeight > weights[i]) minWeight = weights[i];
         }
         verticalStep = (maxWeight - minWeight) / (weights.Length-1);
 
-        for (int i = 0; i < _vertical.Length; i++)
+        if(minWeight == maxWeight)
         {
-            _vertical[i].text = (minWeight + verticalStep * i).ToString();
+            _vertical[_vertical.Length-1].text = minWeight.ToString();
+        }
+        else
+        {
+            for (int i = 0; i < _vertical.Length; i++)
+            {
+                _vertical[i].text = (minWeight + verticalStep * i).ToString();
+            }
         }
     }
 
-    void SetupHorizontalAxis(int MonthNumber)
+    void SetupHorizontalAxis(int MonthNumber, int[]weights)
     {
         MonthNumber += 7;
-        int i = 0;
-        while(i < 6)
+        for(int i = 0; i < weights.Length; i++) 
         {
-            _horizontal[i].text = GlobalController.MonthNames[(MonthNumber++)%12].Substring(0,3).ToString();
-            i++;
+            _horizontal[i].text = GlobalController.MonthNames[(MonthNumber+i)%12].Substring(0,3).ToString();
         }
     }
-
 }

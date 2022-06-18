@@ -5,5 +5,5 @@ using UnityEngine;
 public class GraphicInfo
 {
     public int MonthNumber;
-    public int?[] LastWeights;
+    public int[] LastWeights;
 }

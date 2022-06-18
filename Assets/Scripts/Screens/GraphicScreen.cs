@@ -6,16 +6,17 @@ public class GraphicScreen : Screen
 {
     [SerializeField] Graphic _graphic;
     GraphicInfo _graphicInfo;
-    private void Start()
+    private void Awake()
     {
         _graphicInfo = new GraphicInfo();
-        _graphicInfo.LastWeights = new int?[6];
-        for(int i = 0; i < _graphicInfo.LastWeights[i];i++) _graphicInfo.LastWeights[i] = null;
-        _graphicInfo.MonthNumber = GlobalController.Month - 1;
+        _graphicInfo.LastWeights = new int[6];
+        for(int i = 0; i < _graphicInfo.LastWeights[i];i++) _graphicInfo.LastWeights[i] = 0;
     }
     public override void Show()
     {
         base.Show();
+        _graphicInfo.MonthNumber = GlobalController.Month - 1;
+        _graphicInfo.LastWeights = DBOperator.GetLastWeights();
         _graphic.DrawGraph(_graphicInfo);
     }
     public void UpdateLastWeight(int weight)

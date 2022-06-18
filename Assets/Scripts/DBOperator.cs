@@ -55,8 +55,8 @@ public static class DBOperator
             if (reader.Read())
             {
                 PlayerPrefs.SetInt("user_id", reader.GetInt32(0));
-                reader.Close();
             }
+            reader.Close();
 
             dbConnection.Close();
             return true;
@@ -86,6 +86,7 @@ public static class DBOperator
                     return true;
                 }
             }
+            reader.Close();
             dbConnection.Close();
             return false;
         }
@@ -105,17 +106,19 @@ public static class DBOperator
             " VALUES(" + (int)answersList.Gender + "," + (int)answersList.Goal + "," + answersList.Height + "," + answersList.Weight + "," + answersList.DesiredWeight + "," + (int)answersList.EatingFrequency + "," + (int)answersList.ActivityLevel + ")";
         command.ExecuteScalar();
 
+
         command.CommandText = "SELECT id FROM user_data ORDER BY id DESC LIMIT 1";
         var reader = command.ExecuteReader();
         int data_id = 0;
         if (reader.Read())
         {
             data_id = reader.GetInt32(0);
-            reader.Close();
         }
+        reader.Close();
 
         command.CommandText = "UPDATE user SET user_data_id=" + data_id+ " WHERE id=" + PlayerPrefs.GetInt("user_id");
         command.ExecuteScalar();
+        GlobalController.UserData.Id = data_id;
 
         foreach(Allergenes item in answersList.Allergenes)
         {
@@ -123,6 +126,7 @@ public static class DBOperator
             command.ExecuteScalar();
         }
         dbConnection.Close();
+
     }
 
     public static ProfileData GetUserViewData()
@@ -268,23 +272,41 @@ public static class DBOperator
         dbConnection.Open();
         command = dbConnection.CreateCommand();
 
-        if(userData.GoalId != 0) command.CommandText = "UPDATE user_data SET goal_id ="+ (int)userData.GoalId+" WHERE id="+userData.Id;
-        command.ExecuteScalar();
+        if (userData.GoalId != 0)
+        {
+            command.CommandText = "UPDATE user_data SET goal_id =" + (int)userData.GoalId + " WHERE id=" + userData.Id;
+            command.ExecuteScalar();
+        }
 
-        if (userData.Login != null) command.CommandText = "UPDATE user SET login ='" + userData.Login + "' WHERE id=" + PlayerPrefs.GetInt("user_id");
-        command.ExecuteScalar();
+        if (userData.Login != null)
+        {
+            command.CommandText = "UPDATE user SET login ='" + userData.Login + "' WHERE id=" + PlayerPrefs.GetInt("user_id");
+            command.ExecuteScalar();
+        }
 
-        if (userData.Weight != 0) command.CommandText = "UPDATE user_data SET weight =" + userData.Weight + " WHERE id=" + userData.Id;
-        command.ExecuteScalar();
+        if (userData.Weight != 0)
+        {
+            command.CommandText = "UPDATE user_data SET weight =" + userData.Weight + " WHERE id=" + userData.Id;
+            command.ExecuteScalar();
+        }
 
-        if (userData.Height != 0) command.CommandText = "UPDATE user_data SET height =" + userData.Height + " WHERE id=" + userData.Id;
-        command.ExecuteScalar();
+        if (userData.Height != 0)
+        {
+            command.CommandText = "UPDATE user_data SET height =" + userData.Height + " WHERE id=" + userData.Id;
+            command.ExecuteScalar();
+        }
 
-        if (userData.ActivityLevel != 0) command.CommandText = "UPDATE user_data SET activity_level_id =" + (int)userData.ActivityLevel + " WHERE id=" + userData.Id;
-        command.ExecuteScalar();
+        if (userData.ActivityLevel != 0)
+        {
+            command.CommandText = "UPDATE user_data SET activity_level_id =" + (int)userData.ActivityLevel + " WHERE id=" + userData.Id;
+            command.ExecuteScalar();
+        }
 
-        if (userData.EatingFrequency != 0) command.CommandText = "UPDATE user_data SET eating_frequency_id =" + (int)userData.EatingFrequency + " WHERE id=" + userData.Id;
-        command.ExecuteScalar();
+        if (userData.EatingFrequency != 0)
+        {
+            command.CommandText = "UPDATE user_data SET eating_frequency_id =" + (int)userData.EatingFrequency + " WHERE id=" + userData.Id;
+            command.ExecuteScalar();
+        }
 
         command.CommandText = "DELETE FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id");
         command.ExecuteScalar();
@@ -296,6 +318,8 @@ public static class DBOperator
         }
 
         dbConnection.Close();
+
+        UpdateWeights(GlobalController.Month);
     }
 
     public static List<Product> GetUserProducts()
@@ -333,37 +357,56 @@ public static class DBOperator
     public static List<DietInfo> GetDiets()
     {
         List<DietInfo> result = new List<DietInfo>();
-        int goalId = 0;
-        int dataId = 0;
         dbConnection.Open();
         command = dbConnection.CreateCommand();
-        command.CommandText = "SELECT user_data_id FROM user WHERE id=" + PlayerPrefs.GetInt("user_id");
+
+        List<int> dietIds = new List<int>();
+
+        command.CommandText = "SELECT id FROM diets WHERE goal_id=" + (int)GlobalController.UserData.GoalId;
         var reader = command.ExecuteReader();
-        if (reader.Read())
-        {
-            dataId = reader.GetInt32(0);
-        }
-        reader.Close();
-
-        command.CommandText = "SELECT goal_id from user_data WHERE id=" + dataId;
-        reader = command.ExecuteReader();
-        if (reader.Read())
-        {
-            goalId = reader.GetInt32(0);
-        }
-        reader.Close();
-
-        command.CommandText = "SELECT id,name,description FROM diets WHERE goal_id="+(int)goalId;
-        reader = command.ExecuteReader();
         while (reader.Read())
         {
-            DietInfo newDietInfo = new DietInfo();
-            newDietInfo.Id = reader.GetInt32(0);
-            newDietInfo.Name = reader.GetString(1);
-            newDietInfo.Description = reader.GetString(2);
-            result.Add(newDietInfo);
+            dietIds.Add(reader.GetInt32(0));
         }
-        
+        reader.Close();
+
+        for(int i = 0; i < dietIds.Count; i++)
+        {
+            bool flag = false;
+            for(int j = 0; j < GlobalController.UserData.Allergenes.Count; j++)
+            {
+                if (flag) break;
+                command.CommandText = "SELECT allergen_id FROM diets_and_allergenes WHERE diet_id=" + dietIds[i];
+                reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) == (int)GlobalController.UserData.Allergenes[j])
+                    {
+                        dietIds.RemoveAt(i);
+                        flag = true;
+                        reader.Close();
+                        break;
+                    }
+                }
+                reader.Close();
+            }
+        }
+
+        foreach(int id in dietIds)
+        {
+            command.CommandText = "SELECT name,description FROM diets WHERE id="+id;
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                DietInfo newDietInfo = new DietInfo();
+                newDietInfo.Id = id;
+                newDietInfo.Name = reader.GetString(0);
+                newDietInfo.Description = reader.GetString(1);
+                result.Add(newDietInfo);
+            }
+
+            reader.Close();
+        }
         dbConnection.Close();
         return result;
     }
@@ -379,7 +422,7 @@ public static class DBOperator
         {
             dataId = reader.GetInt32(0);
         }
-
+        reader.Close();
         command = dbConnection.CreateCommand();
         command.CommandText = "UPDATE user_data SET diet_id=" + diet.Id + " WHERE id=" + dataId;
         command.ExecuteScalar();
@@ -406,11 +449,14 @@ public static class DBOperator
         reader.Close();
 
         double time = DateTime.Now.TimeOfDay.TotalHours;
-        if (PlayerPrefs.GetInt("HadBreakfastToday")==0) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        if (PlayerPrefs.GetInt("HadBreakfastToday") == 0) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
         else if (PlayerPrefs.GetInt("HadLunchToday") == 0) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
         else if (PlayerPrefs.GetInt("HadSupperToday") == 0) { command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else return null;
-
+        else
+        {
+            dbConnection.Close();
+            return null;
+        }
         reader = command.ExecuteReader();
         if (reader.Read())
         {
@@ -610,6 +656,45 @@ public static class DBOperator
             result[result.Count - 1].Measure = measure;
         }
 
+        dbConnection.Close();
+        return result;
+    }
+
+    public static void UpdateWeights(int month)
+    {
+        dbConnection.Open();
+        
+        command.CommandText = "SELECT month"+month+" FROM user_weights WHERE user_id=" + PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        if (!reader.Read())
+        {
+            reader.Close();
+            command.CommandText = "INSERT INTO user_weights(user_id,month1,month2,month3,month4,month5,month6,month7,month8,month9,month10,month11,month12) VALUES(" + PlayerPrefs.GetInt("user_id") + ",0,0,0,0,0,0,0,0,0,0,0,0)";
+            command.ExecuteScalar();
+        }
+        reader.Close();
+        command.CommandText = "UPDATE user_weights SET month" + month + "= " + GlobalController.UserData.Weight + " WHERE user_id =" + PlayerPrefs.GetInt("user_id");
+        command.ExecuteScalar();
+        dbConnection.Close();
+    }
+
+    public static int[] GetLastWeights()
+    {
+        int[] result = new int[6];
+        dbConnection.Open();
+        command.CommandText = "SELECT month1,month2,month3,month4,month5,month6,month7,month8,month9,month10,month11,month12 from user_weights WHERE user_id=" + PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            int month = GlobalController.Month;
+            if (month < 6) month += 12;
+            for(int i = 5; i >= 0; i--)
+            {
+                result[i] = reader.GetInt32(month%12-1);
+                month--;
+            }
+        }
+        reader.Close();
         dbConnection.Close();
         return result;
     }

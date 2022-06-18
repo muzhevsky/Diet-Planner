@@ -14,6 +14,7 @@ public class AllergenesInputButton : Answer
         {
             if(item.Toggle.isOn) allergenesIds.Add(item.AllergenesId);
         }
+        if (allergenesIds.Count == 0) allergenesIds.Add(Allergenes.None);
         _testScreen.SetAllergenes(allergenesIds);
         _testScreen.LoadNextQuestion();
     }
