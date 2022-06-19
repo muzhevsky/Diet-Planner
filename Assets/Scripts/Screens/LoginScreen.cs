@@ -7,7 +7,7 @@ public class LoginScreen : Screen
 {
     [SerializeField] InputField _loginInput;
     [SerializeField] InputField _passwordInput;
-       
+    [SerializeField] BarCodeScanner _barcodeScanner;
     
     public void CheckLoginData()
     {
@@ -31,6 +31,7 @@ public class LoginScreen : Screen
 
             if(GlobalController.UserData.DietId!=0) _uiController.ShowScreen(_uiController.MainScreen);
             else _uiController.ShowScreen(_uiController.TestScreen);
+            _barcodeScanner.Init();
         }
     }
 

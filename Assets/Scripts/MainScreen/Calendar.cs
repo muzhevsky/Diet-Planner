@@ -22,15 +22,14 @@ public class Calendar : MonoBehaviour
         int thisMonth = DateTime.Today.Month;
         int thisYear = DateTime.Today.Year;
 
-        _month.text = GlobalController.MonthNames[thisMonth-1];
+        _month.text = GlobalController.MonthNames[thisMonth - 1];
         _year.text = thisYear.ToString();
         if (IsLeapYear(thisYear)) _monthCapacity[1] = 29;
         else _monthCapacity[1] = 28;
 
-        int pos = 0;
-        while (pos != (int)DateTime.Today.DayOfWeek-1) pos++;
+        int pos = 7-thisDay%7;
 
-        for(int i = pos; i < _monthCapacity[thisMonth] +pos; i++)
+        for (int i = pos; i < _monthCapacity[thisMonth] + pos; i++)
         {
             _days[i].SetText((i - pos + 1).ToString());
             _days[pos + thisDay - 1].Highlight(false);

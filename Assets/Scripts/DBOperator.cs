@@ -325,6 +325,7 @@ public static class DBOperator
     public static List<Product> GetUserProducts()
     {
         List<Product> products = new List<Product>();
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
         dbConnection.Open();
         command = dbConnection.CreateCommand();
         command.CommandText = "SELECT amount_left,ingredient_id FROM user_ingredients WHERE user_id="+PlayerPrefs.GetInt("user_id");
@@ -440,7 +441,8 @@ public static class DBOperator
         if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
         dbConnection.Open();
         command = dbConnection.CreateCommand();
-        command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId+" AND day="+(int)DateTime.Today.DayOfWeek;
+        if(DateTime.Today.DayOfWeek!=0)command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId+" AND day="+(int)DateTime.Today.DayOfWeek;
+        else command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId + " AND day=7";
         var reader = command.ExecuteReader();
         if (reader.Read())
         {
@@ -697,5 +699,28 @@ public static class DBOperator
         reader.Close();
         dbConnection.Close();
         return result;
+    }
+
+    public static Product GetProductByCode(string code)
+    {
+
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT name,measure,default_quantity FROM ingredients WHERE barcode='" + code + "'";
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            Product result = new Product();
+            result.Name = reader.GetString(0);
+            result.Measure = reader.GetString(1);
+            result.Amount = reader.GetInt32(2);
+            reader.Close();
+            return result;
+        }
+        else
+        {
+            reader.Close();
+            return null;
+        }
     }
 }

@@ -17,7 +17,7 @@ public class ToggleDailyMenuButton : MonoBehaviour
     {
         Meal meal = DBOperator.GetMeal(GlobalController.UserData);
 
-        for(int i = 0; i < _mealContainer.childCount; i++)
+        for (int i = 0; i < _mealContainer.childCount; i++)
         {
             Destroy(_mealContainer.GetChild(i).gameObject);
         }

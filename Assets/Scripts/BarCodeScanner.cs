@@ -11,10 +11,10 @@ using Wizcorp.Utils.Logger;
 	{
 
 		private IScanner BarcodeScanner;
-		public Text TextHeader;
 		public RawImage Image;
-		//public AudioSource Audio;
-
+	[SerializeField] AddAnyFood _addFoodController;
+	[SerializeField] GlobalUiController _uiController;
+	[SerializeField] GameObject _addWindow;
 		// Disable Screen Rotation on that screen
 		//void Awake()
 		//{
@@ -22,7 +22,7 @@ using Wizcorp.Utils.Logger;
 		//	Screen.autorotateToPortraitUpsideDown = false;
 		//}
 
-		void Start()
+		public void Init()
 		{
 			// Create a basic scanner
 			BarcodeScanner = new Scanner();
@@ -42,9 +42,6 @@ using Wizcorp.Utils.Logger;
 			};
 
 			// Track status of the scanner
-			BarcodeScanner.StatusChanged += (sender, arg) => {
-				TextHeader.text = "Status: " + BarcodeScanner.Status;
-			};
 		}
 
 		/// <summary>
@@ -72,8 +69,10 @@ using Wizcorp.Utils.Logger;
 			// Start Scanning
 			BarcodeScanner.Scan((barCodeType, barCodeValue) => {
 				BarcodeScanner.Stop();
-				TextHeader.text = "Found: " + barCodeType + " / " + barCodeValue;
 
+				_addFoodController.Product = DBOperator.GetProductByCode(barCodeValue);
+				_uiController.ShowScreen(_uiController.MyFoodScreen);
+				_addWindow.SetActive(true);
 				// Feedback
 				//Audio.Play();
 

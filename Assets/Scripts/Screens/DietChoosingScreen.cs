@@ -12,6 +12,12 @@ public class DietChoosingScreen : Screen
     public override void Show()
     {
         base.Show();
+
+        for(int i = 0; i < _container.childCount; i++)
+        {
+            Destroy(_container.GetChild(i).gameObject);
+        }
+
         List<DietInfo> diets = DBOperator.GetDiets();
         foreach (DietInfo diet in diets)
         {
