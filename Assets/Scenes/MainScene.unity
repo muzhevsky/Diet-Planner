@@ -320,7 +320,6 @@ MonoBehaviour:
   _uiController: {fileID: 1992996921}
   _loginInput: {fileID: 1115192489}
   _passwordInput: {fileID: 312615091}
-  _barcodeScanner: {fileID: 1487674511}
 --- !u!224 &8961462
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3227,6 +3226,7 @@ MonoBehaviour:
   _container: {fileID: 218478500}
   _addFoodWindow: {fileID: 1469381352}
   _addFoodButton: {fileID: 1561264970}
+  _barcodeScanner: {fileID: 1487674511}
 --- !u!1 &192951153
 GameObject:
   m_ObjectHideFlags: 0

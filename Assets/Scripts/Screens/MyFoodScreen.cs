@@ -9,6 +9,7 @@ public class MyFoodScreen : Screen
     [SerializeField] GameObject _addFoodWindow;
     [SerializeField] AddAnyFood _addFoodButton;
 
+    [SerializeField] BarCodeScanner _barcodeScanner;
 
     public override void Show()
     {
@@ -31,6 +32,7 @@ public class MyFoodScreen : Screen
             ingredientContainer.SetProduct(item);
             ingredientContainer.Init(item);
         }
+        _barcodeScanner.Init();
     }
     public void ShowAddFoodWindow()
     {

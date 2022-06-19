@@ -36,6 +36,9 @@ public class RegistrationScreen : Screen
             if (DBOperator.AddUserToDB(registrationInfo))
             {
                 _uiController.ShowScreen(_uiController.TestScreen);
+                GlobalController.UserData.Login = registrationInfo.Login;
+                GlobalController.UserData.PhoneNumber = registrationInfo.Phone;
+                GlobalController.UserData.Name = registrationInfo.DisplayedName;
             }
         }
     }
