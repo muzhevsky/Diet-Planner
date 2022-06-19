@@ -15,6 +15,7 @@ public class GlobalUiController : MonoBehaviour
     public DietChoosingScreen DietChoosingScreen;
     public BarCodeScreen BarCodeScreen;
     public MyFoodScreen MyFoodScreen;
+    public AchievementsScreen AchievementsScreen;
     public Screen ActiveScreen;
 
     Screen _prevScreen;

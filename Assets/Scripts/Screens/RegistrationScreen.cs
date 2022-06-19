@@ -14,6 +14,16 @@ public class RegistrationScreen : Screen
     [SerializeField] InputField _phoneInput;
     [SerializeField] InputField _displayedNameInput;
 
+    public override void Show()
+    {
+        base.Show();
+        _loginInput.text = "";
+        _passwordInput.text = "";
+        _confirmPasswordInput.text = "";
+        _phoneInput.text = "";
+        _displayedNameInput.text = "";
+    }
+
     public void CheckRegistrationData()
     {
         if (_loginInput.text == "" ||
@@ -39,6 +49,7 @@ public class RegistrationScreen : Screen
                 GlobalController.UserData.Login = registrationInfo.Login;
                 GlobalController.UserData.PhoneNumber = registrationInfo.Phone;
                 GlobalController.UserData.Name = registrationInfo.DisplayedName;
+
             }
         }
     }

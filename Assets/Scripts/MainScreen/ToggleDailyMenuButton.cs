@@ -29,16 +29,20 @@ public class ToggleDailyMenuButton : MonoBehaviour
         _dailyMenu.SetActive(!_dailyMenu.activeSelf);
         if (_dailyMenu.activeSelf == false) _buttonText.text = "Меню";
         else _buttonText.text = "Календарь";
-        _mealType.text = meal.Type;
-        _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month];
-        foreach (Food food in meal.FoodList)
-        {
-            GameObject newCard = Instantiate(_mealPrefab, _mealContainer);
-            newCard.GetComponent<FoodCardController>().SetTexts(food);
-        }
-        yield return new WaitForEndOfFrame();
-        _calendar.SetActive(!_calendar.activeSelf);
 
-        if (meal.FoodList.Count == 0) _mealType.text = "Возвращайтесь завтра";
+        if (meal != null)
+        {
+            _mealType.text = meal.Type;
+            _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month];
+            foreach (Food food in meal.FoodList)
+            {
+                GameObject newCard = Instantiate(_mealPrefab, _mealContainer);
+                newCard.GetComponent<FoodCardController>().SetTexts(food);
+            }
+            yield return new WaitForEndOfFrame();
+            _calendar.SetActive(!_calendar.activeSelf);
+        }
+
+        else _mealType.text = "Возвращайтесь завтра";
     }
 }

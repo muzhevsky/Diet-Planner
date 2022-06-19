@@ -7,7 +7,14 @@ public class LoginScreen : Screen
 {
     [SerializeField] InputField _loginInput;
     [SerializeField] InputField _passwordInput;
-    
+
+    public override void Show()
+    {
+        base.Show();
+        _loginInput.text = "";
+        _passwordInput.text = "";
+    }
+
     public void CheckLoginData()
     {
         if (_loginInput.text == "" ||

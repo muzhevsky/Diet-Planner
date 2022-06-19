@@ -102,8 +102,8 @@ public static class DBOperator
     {
         dbConnection.Open();
         command = dbConnection.CreateCommand();
-        command.CommandText = "INSERT INTO user_data(gender_id,goal_id,height,weight,desired_weight,eating_frequency_id, activity_level_id)" +
-            " VALUES(" + (int)answersList.Gender + "," + (int)answersList.Goal + "," + answersList.Height + "," + answersList.Weight + "," + answersList.DesiredWeight + "," + (int)answersList.EatingFrequency + "," + (int)answersList.ActivityLevel + ")";
+        command.CommandText = "INSERT INTO user_data(gender_id,goal_id,height,weight,desired_weight,eating_frequency_id, activity_level_id, had_breakfast,had_lunch,had_supper)" +
+            " VALUES(" + (int)answersList.Gender + "," + (int)answersList.Goal + "," + answersList.Height + "," + answersList.Weight + "," + answersList.DesiredWeight + "," + (int)answersList.EatingFrequency + "," + (int)answersList.ActivityLevel + ","+0+","+0+","+0+")";
         command.ExecuteScalar();
 
 
@@ -260,10 +260,13 @@ public static class DBOperator
             amount = reader.GetInt32(0)-ingredient.Amount;
         }
         reader.Close();
-        if (amount < 0) amount = 0;
 
         command.CommandText = "UPDATE user_ingredients SET amount_left=" + amount + " WHERE ingredient_id=" + ingredient.Id + " AND user_id=" + PlayerPrefs.GetInt("user_id");
         command.ExecuteScalar();
+
+        command.CommandText = "DELETE FROM user_ingredients WHERE amount_left<0";
+        command.ExecuteScalar();
+
         dbConnection.Close();
     }
 
@@ -314,6 +317,15 @@ public static class DBOperator
         foreach (Allergenes item in userData.Allergenes)
         {
             command.CommandText = "INSERT INTO allergenes_links(user_id, allergen_id) VALUES(" + PlayerPrefs.GetInt("user_id") + "," + (int)item + ")";
+            command.ExecuteScalar();
+        }
+
+        command.CommandText = "DELETE FROM user_achievements WHERE user_id=" + PlayerPrefs.GetInt("user_id");
+        command.ExecuteScalar();
+
+        foreach (Achievements item in userData.AchievementsIds)
+        {
+            command.CommandText = "INSERT INTO user_achievements(user_id, achievement_id) VALUES(" + PlayerPrefs.GetInt("user_id") + "," + (int)item + ")";
             command.ExecuteScalar();
         }
 
@@ -450,10 +462,23 @@ public static class DBOperator
         }
         reader.Close();
 
-        double time = DateTime.Now.TimeOfDay.TotalHours;
-        if (PlayerPrefs.GetInt("HadBreakfastToday") == 0) { command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else if (PlayerPrefs.GetInt("HadLunchToday") == 0) { command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId; }
-        else if (PlayerPrefs.GetInt("HadSupperToday") == 0) { command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId; }
+        if (GetBreakfastState() == 0) {
+            dbConnection.Open();
+            command = dbConnection.CreateCommand();
+            command.CommandText = "SELECT breakfast_id FROM daily_menu WHERE id=" + dailyMenuId;
+        }
+        else if (GetLunchState() == 0)
+        {
+            dbConnection.Open();
+            command = dbConnection.CreateCommand();
+            command.CommandText = "SELECT lunch_id FROM daily_menu WHERE id=" + dailyMenuId;
+        }
+        else if (GetSupperState() == 0)
+        {
+            dbConnection.Open();
+            command = dbConnection.CreateCommand();
+            command.CommandText = "SELECT supper_id FROM daily_menu WHERE id=" + dailyMenuId;
+        }
         else
         {
             dbConnection.Close();
@@ -571,8 +596,6 @@ public static class DBOperator
         }
         reader.Close();
 
-
-        userData.Allergenes = new List<Allergenes>();
         command.CommandText = "SELECT allergen_id FROM allergenes_links WHERE user_id=" + PlayerPrefs.GetInt("user_id");
         reader = command.ExecuteReader();
         while (reader.Read())
@@ -715,12 +738,151 @@ public static class DBOperator
             result.Measure = reader.GetString(1);
             result.Amount = reader.GetInt32(2);
             reader.Close();
+            dbConnection.Close();
             return result;
         }
         else
         {
             reader.Close();
+            dbConnection.Close();
             return null;
         }
+    }
+
+    public static void SetBreakfastState(int state)
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        int userDataId = 0;
+        command.CommandText = "SELECT user_data_id FROM user WHERE id="+PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        if (reader.Read()) { userDataId = reader.GetInt32(0); }
+        reader.Close();
+        command.CommandText = "UPDATE user_data SET had_breakfast= " + state + " WHERE id=" + userDataId;
+        command.ExecuteScalar();
+        dbConnection.Close();
+    }
+    public static void SetLunchState(int state)
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        int userDataId = 0;
+        command.CommandText = "SELECT user_data_id FROM user WHERE id=" + PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        if (reader.Read()) { userDataId = reader.GetInt32(0); }
+        reader.Close();
+        command.CommandText = "UPDATE user_data SET had_lunch= " + state + " WHERE id=" + userDataId;
+        command.ExecuteScalar();
+        dbConnection.Close();
+    }
+    public static void SetSupperState(int state)
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        int userDataId = 0;
+        command.CommandText = "SELECT user_data_id FROM user WHERE id=" + PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        if (reader.Read()) { userDataId = reader.GetInt32(0); }
+        reader.Close();
+        command.CommandText = "UPDATE user_data SET had_supper= " + state + " WHERE id=" + userDataId;
+        command.ExecuteScalar();
+        dbConnection.Close();
+    }
+
+    public static int GetBreakfastState()
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT had_breakfast FROM user_data WHERE id=" + GlobalController.UserData.Id;
+        var reader = command.ExecuteReader();
+        if (reader.Read()) { 
+            int result = reader.GetInt32(0);
+            reader.Close();
+            dbConnection.Close();
+            return result;
+        }
+        reader.Close();
+        dbConnection.Close();
+        return 0;
+    }
+
+    public static int GetLunchState()
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT had_lunch FROM user_data WHERE id=" + GlobalController.UserData.Id;
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            int result = reader.GetInt32(0);
+            reader.Close();
+            dbConnection.Close();
+            return result;
+        }
+        reader.Close();
+        dbConnection.Close();
+        return 0;
+    }
+
+    public static int GetSupperState()
+    {
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT had_supper FROM user_data WHERE id=" + GlobalController.UserData.Id;
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            int result = reader.GetInt32(0);
+            reader.Close();
+            dbConnection.Close();
+            return result;
+        }
+        reader.Close();
+        dbConnection.Close();
+        return 0;
+    }
+
+    public static List<Achievement> GetAchievements()
+    {
+        List<Achievement> result = new List<Achievement>();
+        dbConnection.Open();
+        List<int> achievementIds = new List<int>();
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT achievement_id FROM user_achievements WHERE user_id="+PlayerPrefs.GetInt("user_id");
+        var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            achievementIds.Add(reader.GetInt32(0));
+        }
+        reader.Close();
+
+        foreach(int id in achievementIds)
+        {
+            command.CommandText = "SELECT name,description,id FROM achievements WHERE id=" + id;
+            reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                Achievement newAchievement = new Achievement();
+                newAchievement.Name = reader.GetString(0);
+                newAchievement.Description = reader.GetString(1);
+                newAchievement.Id = (Achievements)reader.GetInt32(2);
+                result.Add(newAchievement);
+            }
+            reader.Close();
+        }
+        dbConnection.Close();
+
+        foreach(Achievement achievement in result)
+        {
+            GlobalController.UserData.AchievementsIds.Add(achievement.Id);
+        }
+
+        return result;
     }
 }

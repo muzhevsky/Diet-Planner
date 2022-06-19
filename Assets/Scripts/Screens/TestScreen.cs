@@ -35,6 +35,10 @@ public class TestScreen : Screen
             SetupUserData();
             DBOperator.UpdateWeights(GlobalController.Month);
 
+            DBOperator.SetBreakfastState(0);
+            DBOperator.SetLunchState(0);
+            DBOperator.SetSupperState(0);
+
             _uiController.ShowScreen(_uiController.DietChoosingScreen);
         }
     }

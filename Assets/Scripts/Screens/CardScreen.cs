@@ -66,13 +66,13 @@ public class CardScreen : Screen
             switch (_currentMeal.Type)
             {
                 case "Завтрак":
-                    PlayerPrefs.SetInt("HadBreakfastToday",1);
+                    DBOperator.SetBreakfastState(1);
                     break;
                 case "Обед":
-                    PlayerPrefs.SetInt("HadLunchToday", 1);
+                    DBOperator.SetLunchState(1);
                     break;
                 case "Ужин":
-                    PlayerPrefs.SetInt("HadSupperToday", 1);
+                    DBOperator.SetSupperState(1);
                     break;
             }
         }
