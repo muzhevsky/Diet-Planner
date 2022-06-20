@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GraphicScreen : Screen
 {
-    [SerializeField] Graphic _graphic;
+    [SerializeField] MyGraphic _graphic;
     GraphicInfo _graphicInfo;
     private void Awake()
     {

@@ -26,8 +26,8 @@ public class Calendar : MonoBehaviour
         _year.text = thisYear.ToString();
         if (IsLeapYear(thisYear)) _monthCapacity[1] = 29;
         else _monthCapacity[1] = 28;
-
-        int pos = 7-thisDay%7;
+        print(new DateTime(thisYear, thisMonth, 1).Day);
+        int pos = (int)new DateTime(thisYear,thisMonth,1).DayOfWeek-1;
 
         for (int i = pos; i < _monthCapacity[thisMonth] + pos; i++)
         {

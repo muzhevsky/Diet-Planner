@@ -878,6 +878,7 @@ public static class DBOperator
         }
         dbConnection.Close();
 
+        GlobalController.UserData.AchievementsIds.Clear();
         foreach(Achievement achievement in result)
         {
             GlobalController.UserData.AchievementsIds.Add(achievement.Id);

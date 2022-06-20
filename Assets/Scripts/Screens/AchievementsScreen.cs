@@ -7,6 +7,13 @@ public class AchievementsScreen : Screen
     [SerializeField] Transform _container;
     [SerializeField] GameObject _achievementPrefab;
     [SerializeField] GameObject _alert;
+    List<Achievement> list;
+
+    public void Init()
+    {
+        list = DBOperator.GetAchievements();
+    }
+
     public override void Show()
     {
         base.Show();
@@ -15,8 +22,8 @@ public class AchievementsScreen : Screen
             Destroy(_container.GetChild(i).gameObject);
         }
 
-        List<Achievement> list = DBOperator.GetAchievements();
-        foreach(Achievement achievement in list)
+        list = DBOperator.GetAchievements();
+        foreach (Achievement achievement in list)
         {
             AchievementContainer achievementContainer = Instantiate(_achievementPrefab, _container).GetComponent<AchievementContainer>();
             achievementContainer.SetAchievementView(achievement);
@@ -61,7 +68,7 @@ public class AchievementsScreen : Screen
         if (!_alert.activeSelf)
         {
             _alert.SetActive(true);
-            _alert.GetComponent<CanvasGroup>().DOFade
+            _alert.GetComponent<CanvasGroup>().DOFade(0, 2f).OnComplete(() => { _alert.SetActive(false); });
         }
     }
 }

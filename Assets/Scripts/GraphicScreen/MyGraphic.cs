@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Graphic : MonoBehaviour
+public class MyGraphic : MonoBehaviour
 {
     [SerializeField] Text[] _horizontal;
     [SerializeField] Text[] _vertical;
@@ -11,12 +11,12 @@ public class Graphic : MonoBehaviour
 
     int maxWeight;
     int minWeight;
-    int verticalStep;
+    float verticalStep;
 
     float _scale;
 
     const int FULL_VERTICAL_LENGTH = 7;
-    const int FULL_HORIZONTAL_LENGTH = 7;
+    const int FULL_HORIZONTAL_LENGTH = 5;
     const float RADIAN = 57.3f;
 
     float _actualVerticalLength;
@@ -46,7 +46,7 @@ public class Graphic : MonoBehaviour
                 {
                     if (graphicInfo.LastWeights[j] == 0) continue;
                     float temp = (float)graphicInfo.LastWeights[j] - (float)minWeight;
-                    _points.Add(new Vector2(rectTransform.sizeDelta.x * j / FULL_VERTICAL_LENGTH + _offset, temp * _scale + _offset));
+                    _points.Add(new Vector2(rectTransform.sizeDelta.x * j / FULL_HORIZONTAL_LENGTH + _offset, temp * _scale + _offset));
                     GameObject newPoint = Instantiate(_linePrefab, this.transform);
                     RectTransform newPointRT = ((RectTransform)newPoint.transform);
                     newPointRT.anchorMin = new Vector2(0, 0);
@@ -109,7 +109,7 @@ public class Graphic : MonoBehaviour
             if (maxWeight < weights[i]) maxWeight = weights[i];
             if (minWeight > weights[i]) minWeight = weights[i];
         }
-        verticalStep = (maxWeight - minWeight) / (weights.Length-1);
+        verticalStep = (float)(maxWeight - minWeight) / (float)(weights.Length-1);
 
         if(minWeight == maxWeight)
         {

@@ -37,6 +37,8 @@ public class LoginScreen : Screen
 
             if(GlobalController.UserData.DietId!=0) _uiController.ShowScreen(_uiController.MainScreen);
             else _uiController.ShowScreen(_uiController.TestScreen);
+
+            _uiController.AchievementsScreen.Init();
         }
     }
 

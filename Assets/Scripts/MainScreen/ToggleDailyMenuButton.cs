@@ -33,7 +33,7 @@ public class ToggleDailyMenuButton : MonoBehaviour
         if (meal != null)
         {
             _mealType.text = meal.Type;
-            _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month];
+            _dateText.text = GlobalController.Day + " " + GlobalController.MonthNames[GlobalController.Month-1];
             foreach (Food food in meal.FoodList)
             {
                 GameObject newCard = Instantiate(_mealPrefab, _mealContainer);
