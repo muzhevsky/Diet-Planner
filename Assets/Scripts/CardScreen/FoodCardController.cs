@@ -13,6 +13,7 @@ public class FoodCardController : MonoBehaviour
     [SerializeField] Text _ingredients;
     [SerializeField] Text _recipe;
 
+    public Text Type;
     public void SetTexts(Food food)
     {
         _name.text = food.Name;

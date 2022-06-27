@@ -10,6 +10,7 @@ public class MainScreen : Screen
     public override void Show()
     {
         base.Show();
+
         Meal _currentMeal = DBOperator.GetMeal(GlobalController.UserData);
         if(_currentMeal!=null)_mealTypeHeaderText.text = _currentMeal.Type;
         else _mealTypeHeaderText.text = "Дождитесь утра";

@@ -11481,7 +11481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7447950717768971387, guid: a169204ff59a78d4d82dbfd76607a89a, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7447950717768971387, guid: a169204ff59a78d4d82dbfd76607a89a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -13397,7 +13397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08235294, g: 0.49803922, b: 0.12156863, a: 1}
+  m_Color: {r: 0.08235294, g: 0.49803922, b: 0.12156863, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

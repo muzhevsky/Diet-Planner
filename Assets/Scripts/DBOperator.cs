@@ -886,4 +886,113 @@ public static class DBOperator
 
         return result;
     }
+
+    public static List<Meal> GetAllMeal(UserData data)
+    {
+        List<Meal> result = new List<Meal>();
+        int dailyMenuId = 0;
+        List<int> mealIds = new List<int>();
+        int mealTypeId = 0;
+
+        if (dbConnection.State == ConnectionState.Open) dbConnection.Close();
+        dbConnection.Open();
+        command = dbConnection.CreateCommand();
+        if (DateTime.Today.DayOfWeek != 0) command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId + " AND day=" + (int)DateTime.Today.DayOfWeek;
+        else command.CommandText = "SELECT daily_menu_id FROM diet_link WHERE diet_id=" + data.DietId + " AND day=7";
+        var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            dailyMenuId = reader.GetInt32(0);
+        }
+        reader.Close();
+
+        command = dbConnection.CreateCommand();
+        command.CommandText = "SELECT breakfast_id, lunch_id,supper_id FROM daily_menu WHERE id=" + dailyMenuId;
+
+        reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            mealIds.Add(reader.GetInt32(0));
+            mealIds.Add(reader.GetInt32(1));
+            mealIds.Add(reader.GetInt32(2));
+        }
+        reader.Close();
+
+        foreach(int mealId in mealIds)
+        {
+            command.CommandText = "SELECT meal_type FROM meal WHERE id=" + mealId;
+            reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                mealTypeId = reader.GetInt32(0);
+            }
+            reader.Close();
+
+            result.Add(new Meal());
+            command.CommandText = "SELECT type FROM meal_types WHERE id=" + mealTypeId;
+            reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                result[result.Count-1].Type = reader.GetString(0);
+            }
+            reader.Close();
+
+            command.CommandText = "SELECT food_id FROM meal_link WHERE meal_id=" + mealId;
+            reader = command.ExecuteReader();
+            result[result.Count - 1].FoodList = new List<Food>();
+            while (reader.Read())
+            {
+                result[result.Count - 1].FoodList.Add(new Food());
+                result[result.Count - 1].FoodList[result[result.Count - 1].FoodList.Count - 1].Id = reader.GetInt32(0);
+            }
+            reader.Close();
+
+            foreach (Food item in result[result.Count - 1].FoodList)
+            {
+                command.CommandText = "SELECT name,calories,proteins,fats,carbohydrates,recipe FROM food WHERE id=" + item.Id;
+                reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    item.Name = reader.GetString(0);
+                    item.Calories = reader.GetInt32(1);
+                    float test = reader.GetFloat(2);
+                    item.Proteins = reader.GetFloat(2);
+                    item.Fats = reader.GetFloat(3);
+                    item.Carbohydrates = reader.GetFloat(4);
+                    item.Recipe = reader.GetString(5);
+                }
+                reader.Close();
+            }
+
+
+            foreach (Food item in result[result.Count - 1].FoodList)
+            {
+                item.Ingredients = new List<Product>();
+                command.CommandText = "SELECT ingredient_id,amount FROM ingredients_link WHERE food_id=" + item.Id;
+                reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    item.Ingredients.Add(new Product());
+                    item.Ingredients[item.Ingredients.Count - 1].Id = reader.GetInt32(0);
+                    item.Ingredients[item.Ingredients.Count - 1].Amount = reader.GetInt32(1);
+                }
+                reader.Close();
+
+                foreach (Product product in item.Ingredients)
+                {
+                    command.CommandText = "SELECT name,measure FROM ingredients WHERE id=" + product.Id;
+                    reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        product.Name = reader.GetString(0);
+                        product.Measure = reader.GetString(1);
+                    }
+                    reader.Close();
+                }
+            }
+        }
+
+        dbConnection.Close();
+        return result;
+    }
 }
